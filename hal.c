@@ -65,7 +65,7 @@ set_systick(uint32_t time)
 }
 
 void
-switches_port(struct GPIO* reg, uint8_t pin_num, uint8_t state)
+switches_port(struct GPIO* reg, pins_num pin_num, uint8_t state)
 {
 	if(state)
 		reg-ODR |= (1 << pin_num);
@@ -74,7 +74,7 @@ switches_port(struct GPIO* reg, uint8_t pin_num, uint8_t state)
 }
 
 void
-set_interr(uint8_t port_name, uint8_t pin_num, uint8_t state)
+set_interr(uint8_t port_name, pins_num pin_num, uint8_t state)
 {
 	uint8_t array_exti[] = {
 		6, 7, 8, 9, 10,
@@ -114,7 +114,7 @@ set_interr(uint8_t port_name, uint8_t pin_num, uint8_t state)
 }
 
 void
-halt_interr(uint8_t state, uint8_t pin_num)
+halt_interr(uint8_t state, pins_num pin_num)
 {
 	if(state == 0)
 		EXTI->IMR &= ~(1 << pin_num);
