@@ -19,7 +19,7 @@ set_power_port(uint32_t port, uint32_t state, struct GPIO* gpio)
 }
 
 void
-set_moder(struct GPIO* reg, uint32_t IO_purp, uint32_t pin_num)
+set_moder(struct GPIO* reg, portconf IO_purp, uint32_t pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
 	reg->MODER = reg->MODER & ~((1 << (new_pin_num + 1)) | (1 << new_pin_num) );
@@ -34,7 +34,7 @@ set_moder(struct GPIO* reg, uint32_t IO_purp, uint32_t pin_num)
 }
 
 void
-set_otyper(struct GPIO* reg, uint32_t IO_purp, uinit32_t pin_num)
+set_otyper(struct GPIO* reg, portconf IO_purp, uinit32_t pin_num)
 {
 	if(IO_purp == PUSH_PULL)
 		reg->OTYPER &= ~(1 << pin_num);
@@ -43,7 +43,7 @@ set_otyper(struct GPIO* reg, uint32_t IO_purp, uinit32_t pin_num)
 }
 
 void
-set_pupdr(struct GPIO* reg, uint32_t IO_purp, uinit32_t pin_num)
+set_pupdr(struct GPIO* reg, portconf IO_purp, uinit32_t pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
 	if(IO_purp == PULL_UP)
