@@ -36,7 +36,7 @@ set_moder(struct GPIO* reg, uint32_t IO_purp, uint32_t pin_num)
 void
 set_otyper(struct GPIO* reg, uint32_t IO_purp, uinit32_t pin_num)
 {
-	if(IO_purp == PUSH-PULL)
+	if(IO_purp == PUSH_PULL)
 		reg->OTYPER &= ~(1 << pin_num);
 	else
 		reg->OTYPER |= (1 << pin_num);
@@ -46,13 +46,13 @@ void
 set_pupdr(struct GPIO* reg, uint32_t IO_purp, uinit32_t pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
-	if(IO_purp == PULL-UP)
+	if(IO_purp == PULL_UP)
 		reg->PUPDR = (reg->PUPDR & ~(1 << (new_pin_num + 1)) | (1 << new_pin_num);
 	else
-	if(IO_purp == PULL-DOWN)
+	if(IO_purp == PULL_DOWN)
 		reg->PUPDR = (reg->PUPDR & ~(1 << new_pin_num) | (1 << (new_pin_num + 1));
 	else
-	if(IO_purp == NEITHER-PULL)
+	if(IO_purp == NEITHER_PULL)
 		reg->PUPDR &= ~(3 << new_pin_num); 
 }
 
