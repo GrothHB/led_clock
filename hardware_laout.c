@@ -19,6 +19,7 @@ set_all(struct GPIO* ptr, struct GPIO* ptr2)
 	set_moder(ptr, INPUT, Px9);
 	set_moder(ptr, INPUT, Px7);
 	set_moder(ptr, INPUT, Px6);
+	set_moder(ptr, INPUT, Px5);
 	set_moder(ptr, GENERAL, Px8);
 
 
@@ -34,4 +35,32 @@ set_all(struct GPIO* ptr, struct GPIO* ptr2)
 	set_pupdr(ptr, PULL_DOWN, Px9);
 	set_pupdr(ptr, PULL_DOWN, Px7);
 	set_pupdr(ptr, PULL_DOWN, Px6);
+	set_pupdr(ptr, PULL_DOWN, Px5);
+}
+
+void
+set_arraygnd(struct ARRAYGND* ptr, struct GPIO* GPIOA, struct GPIO* GPIOB)
+{
+	*ptr = (ARRAYGND) {
+		.A = &GPIOA,
+		.B = &GPIOA,
+		.C = &GPIOA,
+		.E = &GPIOB,
+		.F = &GPIOB,
+		.G = &GPIOB,
+		.H = &GPIOB,
+		.DOT = &GPIOA,
+		.pins_num = { 
+			Px3, Px2, Px10, Px3, Px5,
+			Px4, Px10, Px8
+		}
+	};
+}
+
+void
+set_all_interr(void)
+{
+	set_interr((uint8_t)'A', Px9, ON);
+	set_interr((uint8_t)'A', Px7, ON);
+	set_interr((uint8_t)'A', Px6, ON);
 }

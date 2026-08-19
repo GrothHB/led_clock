@@ -2,6 +2,7 @@
 #include "basic_mapping.h"
 
 void reset_all(struct ARRAYGND* array);
+void dig0(struct ARRAYGND* array);
 void dig1(struct ARRAYGND* array);
 void dig2(struct ARRAYGND* array);
 void dig3(struct ARRAYGND* array);
@@ -21,6 +22,9 @@ light_dig(struct GPIO* port_electr, uint8_t port_electr_num, struct ARRAYGND* ar
 	if(state) {
 		port_electr->ODR |= (0x1 << port_electr_num);
 		switch (num) {
+			case 0:
+				dig0();
+				break;
 			case 1:
 				dig1();
 				break;
@@ -54,6 +58,19 @@ light_dig(struct GPIO* port_electr, uint8_t port_electr_num, struct ARRAYGND* ar
 		port_electr->ODR &= ~(1 << port_elect_num);
 		reset_all();
 }
+
+void
+dig0(struct ARRAYGND* array)
+{
+	MASK_OFF(array->A->ODR, array->pins_num[0]);
+	MASK_OFF(array->B->ODR, array->pins_num[1]);
+	MASK_OFF(array->C->ODR, array->pins_num[2]);
+	MASK_OFF(array->E->ODR, array->pins_num[3]);
+	MASK_OFF(array->F->ODR, array->pins_num[4]);
+	MASK_OFF(array->G->ODR, array->pins_num[5]);
+	MASK_OFF(array->H->ODR, array->pins_num[6]);
+}
+
 void
 dig1(struct ARRAYGND* array)
 {
