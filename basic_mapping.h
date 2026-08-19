@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "symbols."
 
 struct GPIO {
 	volatile uint32_t MODER;
@@ -93,4 +94,12 @@ struct ARRAYGND {
 	struct GPIO* H;
 	struct GPIO* DOT;
 	volatile uint8_t pins_num[7];
+};
+
+struct ARRAYELECT {
+	struct GPIO* FST;
+	struct GPIO* SND;
+	struct GPIO* THRD;
+	struct GPIO* FRTH;
+	volatile pins_num pins_num[4];
 };

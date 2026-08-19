@@ -17,46 +17,50 @@ void dig9(struct ARRAYGND* array);
 #define MASK_OFF(x, y) ( (x) |= (0x1 << (y)) )
 
 void
-light_dig(struct GPIO* port_electr, uint8_t port_electr_num, struct ARRAYGND* array, uint8_t num, uint8_t state)
+turn_pin(struct GPIO* port_electr,pins_num pin_electr_num, uint8_t state)
 {
-	if(state) {
+	if(state)
 		port_electr->ODR |= (0x1 << port_electr_num);
-		switch (num) {
-			case 0:
-				dig0();
-				break;
-			case 1:
-				dig1();
-				break;
-			case 2:
-				dig2();
-				break;
-			case 3:
-				dig3();
-				break;
-			case 4:
-				dig4();
-				break;
-			case 5:
-				dig5();
-				break;
-			case 6:
-				dig6();
-				break;
-			case 7:
-				dig7();
-				break;
-			case 8:
-				dig8();
-				break;
-			case 9:
-				dig9();
-				break;
-		}
-	}
-	else {
+	else  
 		port_electr->ODR &= ~(1 << port_elect_num);
-		reset_all();
+}
+
+void
+light_dig(struct ARRAYGND* array, uint8_t num)
+{
+	switch (num) {
+		case 0:
+			dig0();
+			break;
+		case 1:
+			dig1();
+			break;
+		case 2:
+			dig2();
+			break;
+		case 3:
+			dig3();
+			break;
+		case 4:
+			dig4();
+			break;
+		case 5:
+			dig5();
+			break;
+		case 6:
+			dig6();
+			break;
+		case 7:
+			dig7();
+			break;
+		case 8:
+			dig8();
+			break;
+		case 9:
+			dig9();
+			break;
+	}
+	reset_all();
 }
 
 void

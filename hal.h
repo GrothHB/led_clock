@@ -3,8 +3,7 @@
 #include "symbols.h"
 #include "utilites.h"
 
-void set_power_port(uint32_t port, uint8_t state, struct GPIO* gpio);
-void set_power_port(uint32_t port, uint32_t state, struct GPIO* gpio);
+void set_power_port(uint8_t port, uint8_t state, struct GPIO* gpio);
 void set_moder(struct GPIO* reg, portconf IO_purp, pins_num pin_num);
 void set_otyper(struct GPIO* reg, portconf IO_purp, pins_num pin_num);
 void set_pupdr(struct GPIO* reg, portconf IO_purp, pins_num pin_num);

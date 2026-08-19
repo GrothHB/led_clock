@@ -1,6 +1,6 @@
-
 #include <stdint.h>
 #include "basic_mapping.h"
+#include "sybmols.h"
 
 void reset_all(struct ARRAYGND* array);
 void dig0(struct ARRAYGND* array);
@@ -17,5 +17,5 @@ void dig9(struct ARRAYGND* array);
 #define MASK_ON(x, y) ( (x) &= ~(0x1 << (y)) )
 #define MASK_OFF(x, y) ( (x) |= (0x1 << (y)) )
 
-void light_dig( struct GPIO* port_electr, uint8_t port_electr_num, 
-		struct ARRAYGND* array, uint8_t num, uint8_t state )
+void light_dig(struct ARRAYGND* array, uint8_t num);
+void turn_pin(struct GPIO* port_electr, pins_num pin_electr_num , uint8_t state);

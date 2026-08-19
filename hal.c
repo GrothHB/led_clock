@@ -8,9 +8,9 @@
 #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
 
 void
-set_power_port(uint32_t port, uint32_t state, struct GPIO* gpio)
+set_power_port(uint8_t port, uint8_t state, struct GPIO* gpio)
 {
-	uint32_t off_set = port - (uint32_t)'A';
+	uint8_t off_set = port - (uint8_t)'A';
 	if(state && (off_set > 0 && off_set < 5))
 		RCC->ABH1ENR |= (1 << off_set);
 		gpio = (struct GPIO*)(0x40020000 + (0x400 * off_set));
@@ -19,7 +19,7 @@ set_power_port(uint32_t port, uint32_t state, struct GPIO* gpio)
 }
 
 void
-set_moder(struct GPIO* reg, portconf IO_purp, uint32_t pin_num)
+set_moder(struct GPIO* reg, portconf IO_purp, pins_num pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
 	reg->MODER = reg->MODER & ~((1 << (new_pin_num + 1)) | (1 << new_pin_num) );

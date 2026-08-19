@@ -41,7 +41,7 @@ set_all(struct GPIO* ptr, struct GPIO* ptr2)
 void
 set_arraygnd(struct ARRAYGND* ptr, struct GPIO* GPIOA, struct GPIO* GPIOB)
 {
-	*ptr = (ARRAYGND) {
+	*ptr = (struct ARRAYGND) {
 		.A = &GPIOA,
 		.B = &GPIOA,
 		.C = &GPIOA,
@@ -63,4 +63,16 @@ set_all_interr(void)
 	set_interr((uint8_t)'A', Px9, ON);
 	set_interr((uint8_t)'A', Px7, ON);
 	set_interr((uint8_t)'A', Px6, ON);
+}
+
+void
+set_power_pins(struct ARRAYELECT* power_array, struct GPIO* GPIOA, struct GPIO* GPIOB)
+{
+	*power_array = (struct ARRAYELECT) {
+		.FST = GPIOA,
+		.SND = GPIOA,
+		.THRD = GPIOA,
+		.FRTH = GPIOB,
+		.pin_num = { Px4, Px0, Px1, Px0 }
+	}
 }
