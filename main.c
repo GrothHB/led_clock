@@ -38,7 +38,7 @@ volatile uint32_t systime, pflag1, pflag2, pflag3, sflag;
 volatile uint32_t button_time1, button_time2, button_time3;
 volatile logic state = NEUTRAL;
 volatile side setting = RIGHT;
-volatile uint8_t nflag, rflag, cflag1, cflag3;
+volatile uint8_t nflag, rflag, cflag1, cflag3, digits[4];
 nflag = mflag = cflag1 = cflag2 = cflag3 = 0;
 
 systime = button_time1 = button_time2 = button_time3 = 0;
@@ -75,35 +75,49 @@ main(void)
 				state = cflag3 ? SET_SEC: SET_MIN;
 				break;
 			case ADD_SEC:
-				turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], ON);
-				light_dig(&ARRAY_PORTS, MOD(10 , (MOD(60, (mflag / 1000)))));
-				turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], OFF);
-				turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], ON);
-				light_dig(&ARRAY_PORTS, (MOD(60, (mflag / 1000)) / 10));
-				turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], OFF);
-				turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], ON);
-				light_dig(&ARRAY_PORTS, MOD(10 , (MOD(60, (mflag / 60000)))));
-				turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], OFF);
-				turn_pin(POWER_PIN.FRTH, POWER_PIN.pins_num[3], ON);
-				light_dig(&ARRAY_PORTS, (MOD(60, (mflag / 60000)) / 10));
-				turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[3], OFF);
+				digits[0] =  MOD(10 , (MOD(60, (mflag / 1000)))));
+				digits[1] = (MOD(60, (mflag / 1000)) / 10));
+				digits[2] =  MOD(10 , (MOD(60, (mflag / 60000)))));
+				digits[3] =  (MOD(60, (mflag / 60000)) / 10));
 				break;
 			case ADD_MIN:
-				turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], ON);
-				light_dig(&ARRAY_PORTS, MOD(10 , (MOD(60, (mflag / 60000)))));
-				turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], OFF);
-				turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], ON);
-				light_dig(&ARRAY_PORTS, (MOD(60, (mflag / 60000)) / 10));
-				turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], OFF);
-				turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], ON);
-				light_dig(&ARRAY_PORTS, MOD(10 , (MOD(60, (mflag / 360000)))));
-				turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], OFF);
-				turn_pin(POWER_PIN.FRTH, POWER_PIN.pins_num[3], ON);
-				light_dig(&ARRAY_PORTS, (MOD(60, (mflag / 360000)) / 10));
-				turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[3], OFF);
+				digits[0] =  MOD(10 , (MOD(60, (mflag / 60000)))));
+				digits[1] = (MOD(60, (mflag / 60000)) / 10));
+				digits[2] =  MOD(10 , (MOD(60, (mflag / 360000)))));
+				digits[3] =  (MOD(60, (mflag / 360000)) / 10));
 				break;
 			case SET_SEC:
 				
+void
+systick_inter(void)
+{
+	++systime;
+	++sflag;
+	refresh_screen(&digits[0]);
+
+}
+
+void
+refresh_screen(uint8_t *vec)
+{
+	turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], ON);
+	light_dig(&ARRAY_PORTS, vec[0]);
+	turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], OFF);
+	turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], ON);
+	light_dig(&ARRAY_PORTS,vec[1]);
+	turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], OFF);
+	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], ON);
+	light_dig(&ARRAY_PORTS, vec[2]);
+	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], OFF);
+	turn_pin(POWER_PIN.FRTH, POWER_PIN.pins_num[3], ON);
+	light_dig(&ARRAY_PORTS, vec[3]);
+	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[3], OFF);
+}
+	
+void
+sys_inter(void)
+{
+	
 uint8_t
 update_time(side val)
 {
