@@ -1,6 +1,9 @@
 #include "symbols.h"
 #include "basic_mapping.h"
-#include "hal.c"
+#include "hal.h"
+#include "utilites.h"
+#define ON 1
+#define OFF 0
 
 void
 set_all(struct GPIO* ptr, struct GPIO* ptr2)
@@ -73,6 +76,6 @@ set_power_pins(struct ARRAYELECT* power_array, struct GPIO* GPIOA, struct GPIO* 
 		.SND = GPIOA,
 		.THRD = GPIOA,
 		.FRTH = GPIOB,
-		.pin_num = { Px4, Px0, Px1, Px0 }
-	}
+		.pins_num = { Px4, Px0, Px1, Px0 }
+	};
 }

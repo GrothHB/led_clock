@@ -1,3 +1,6 @@
+#ifndef UTILITIES_H
+#define UTILITIES_H
+
 #include <stdint.h>
 
 #define POWER32 (1UL << 32)
@@ -7,3 +10,6 @@
 
 #define MASK_ON(x, y) ( (x) &= ~(0x1 << (y)) )
 #define MASK_OFF(x, y) ( (x) |= (0x1 << (y)) )
+uint32_t __eabi_uidiv(uint32_t , uint32_t);
+
+#endif

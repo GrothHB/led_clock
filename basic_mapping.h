@@ -1,5 +1,8 @@
+#ifndef BASIC_MAPPING_H
+#define BASIC_MAPPING_H
+
 #include <stdint.h>
-#include "symbols."
+#include "symbols.h"
 
 struct GPIO {
 	volatile uint32_t MODER;
@@ -50,7 +53,7 @@ struct SYSCFG_type {
 };
 
 #define SYSCFG ((struct SYSCFG_type*)0x40013000)
-struct NVID_type {
+struct NVIC_type {
 	volatile uint32_t ISER[8];
 	volatile uint32_t RESERVED0[24];
 	volatile uint32_t ICER[8];
@@ -72,6 +75,8 @@ struct STK_type {
 	volatile uint32_t VAL;
 	volatile uint32_t CALIB;
 };
+
+#define STK ((struct STK_type*)0xE000E010)
 
 struct EXTI_type {
 	volatile uint32_t IMR;
@@ -103,3 +108,5 @@ struct ARRAYELECT {
 	struct GPIO* FRTH;
 	volatile pins_num pins_num[4];
 };
+
+#endif
