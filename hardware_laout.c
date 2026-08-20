@@ -13,7 +13,7 @@ set_all(struct GPIO* ptr, struct GPIO* ptr2)
 	set_moder(ptr, GENERAL, Px2);
 	set_moder(ptr, GENERAL, Px10);
 	set_moder(ptr2, GENERAL, Px3);
-	set_moder(ptr2, GENERAL, Px5);
+	set_moder(ptr2, GENERAL, Px8);
 	set_moder(ptr2, GENERAL, Px4);
 	set_moder(ptr2, GENERAL, Px10);
 	set_moder(ptr, INPUT, Px9);
@@ -27,7 +27,7 @@ set_all(struct GPIO* ptr, struct GPIO* ptr2)
 	set_otyper(ptr, OPEN_DRAIN, Px2);
 	set_otyper(ptr, OPEN_DRAIN, Px10);
 	set_otyper(ptr2, OPEN_DRAIN, Px3);
-	set_otyper(ptr2, OPEN_DRAIN, Px5);
+	set_otyper(ptr2, OPEN_DRAIN, Px8);
 	set_otyper(ptr2, OPEN_DRAIN, Px4);
 	set_otyper(ptr2, OPEN_DRAIN, Px10);
 	set_otyper(ptr, OPEN_DRAIN, Px8);
@@ -51,7 +51,7 @@ set_arraygnd(struct ARRAYGND* ptr, struct GPIO* GPIOA, struct GPIO* GPIOB)
 		.H = &GPIOB,
 		.DOT = &GPIOA,
 		.pins_num = { 
-			Px3, Px2, Px10, Px3, Px5,
+			Px3, Px2, Px10, Px3, Px8,
 			Px4, Px10, Px8
 		}
 	};

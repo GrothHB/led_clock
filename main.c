@@ -25,131 +25,160 @@ typedef enum {
 	ADD_MIN
 }logic;
 
-typedef enum {
-	RIGHT,
-	LEFT
-}side;
-
 void update_time(side val);
 void display(uint8_t val, struct ARRAYELECT* ptr, struct ARRAYGND*);
 void get_time(struct ARRAYGND*, struct ARRAYELECT*, uint32_t, side);
 
-volatile uint32_t systime, pflag1, pflag2, pflag3, sflag;
-volatile uint32_t button_time1, button_time2, button_time3;
+volatile uint32_t systime, tflag, time_of_button1, time_of_button2;
+volatile uint32_t time_of_button3, time_of_button4;
 volatile logic state = NEUTRAL;
-volatile side setting = RIGHT;
-volatile uint8_t nflag, rflag, cflag1, cflag3, digits[4];
-nflag = mflag = cflag1 = cflag2 = cflag3 = 0;
+volatile uint8_t nflag, bflag1, bflag2, bflag3, rigth, left, digits[4];
+nflag = bflag1 = bflag2 = bflag3 = rflag = right = 0;
+left = 1;
 
-systime = button_time1 = button_time2 = button_time3 = 0;
-pflag = BASIC;
+systime = tflag = 0;
+volatile struct GPIO GPIOA, GPIOB;
+volatile struct ARRAYGND ARRAY_PORTS;
+volatile struct ARRAYELECT POWER_PINS;
+set_power('A', ON, &GPIOA);
+set_power('A', ON, &GPIOB);
+set_all(&GPIOA, &GPIOB);
+set_arraygnd(&ARRAY_PORTS, &GPIOA, &GPIOB);
+set_power_pins(&POWER_PINS, &GPIOA, &GPIOB);
+set_all_interr();
 
 int
 main(void)
 {
-	struct GPIO GPIOA, GPIOB;
-	struct ARRAYGND ARRAY_PORTS;
-	struct ARRAYELECT POWER_PINS;
-	set_power('A', ON, &GPIOA);
-	set_power('A', ON, &GPIOB);
-	set_all(&GPIOA, &GPIOB);
-	set_arraygnd(&ARRAY_PORTS, &GPIOA, &GPIOB);
-	set_power_pins(&POWER_PINS, &GPIOA, &GPIOB);
-	set_all_interr();
-
 	while(1) {
 		switch (state) {
 			case NEUTRAL:
 				break;
 			case SETTING_TIME:
-				state = cflag1 ? JUMP_BTW: SET_TIME_SPEND;
+				bflag1 = MOD(2, (bflag1 + 1));
+				state = bflag1 ? JUMP_BTW: SET;
 				break;
 			case JUMP_BTW:
-				setting = (setting == RIGHT) ? LEFT: RIGHT;
-				state = cflag3 ? ADD_SEC: ADD_MIN;
+				right ^= 0x1;
+				left ^= 0x1;
 				break;
 			case SET_TIME_SPEND:
-				cflag3 = MOD(2, (cflag3 + 1));
+				bflag3 = MOD(2, (bfalg3 + 1));
+				state = bfalg3 ? SET_SEC: SET_MIN;
 				break;
 			case SET:
-				state = cflag3 ? SET_SEC: SET_MIN;
+				state = bflag3 ? ADD_SEC: ADD_MIN;
+				bflag2 = 0;
+				tflag = systime;
 				break;
 			case ADD_SEC:
-				digits[0] =  MOD(10 , (MOD(60, (mflag / 1000)))));
+				digits[0] =  MOD(10 , (MOD(60, (tflag / 1000)))));
 				digits[1] = (MOD(60, (mflag / 1000)) / 10));
-				digits[2] =  MOD(10 , (MOD(60, (mflag / 60000)))));
+				digits[2] =  MOD(10 , (MOD(60, (tflag / 60000)))));
 				digits[3] =  (MOD(60, (mflag / 60000)) / 10));
 				break;
 			case ADD_MIN:
-				digits[0] =  MOD(10 , (MOD(60, (mflag / 60000)))));
-				digits[1] = (MOD(60, (mflag / 60000)) / 10));
-				digits[2] =  MOD(10 , (MOD(60, (mflag / 360000)))));
-				digits[3] =  (MOD(60, (mflag / 360000)) / 10));
+				digits[0] =  MOD(10 , (MOD(60, (tflag / 60000))));
+				digits[1] = (MOD(60, tflag / 60000)) / 10;
+				digits[2] =  MOD(10 , (MOD(24, (tflag / 360000))));
+				digits[3] =  (MOD(24, (tflag / 360000))) / 10;
 				break;
 			case SET_SEC:
+				digits[0] = MOD(10, (MOD(60, nflag)));
+				digits[1] = (MOD(60, nflag)) / 10;
+				digits[2] = MOD(60, (nflag / 60));
+				digits[3] = (MOD(60, (nflag / 60))) / 10;
+				break;
+			case SET_MIN:
+				digits[0] =  MOD(10 , (MOD(60, nflag)));
+				digits[1] = (MOD(60, nflag)) / 10;
+				digits[2] =  MOD(10 , (MOD(24, (tflag / 60))));
+				digits[3] =  (MOD(24, (tflag / 60))) / 10;
+				break;
+		}
+	}
+	return 0;
+}
 				
 void
-systick_inter(void)
+systick_interr(void)
 {
 	++systime;
-	++sflag;
-	refresh_screen(&digits[0]);
-
+	++tflag;
+	if(bflag2) {
+		if(bflag3) {
+			turn_dot(POWER_PINS->THRD, POWER_PINS->pins_num[2], ON);
+			turn_dot(POWER_PINS->THRD, POWER_PINS->pins_num[2], OFF);
+		}
+		else {
+			turn_dot(POWER_PINS->FRTH, POWER_PINS->pins_num[3], ON);
+			turn_dot(POWER_PINS->FRTH, POWER_PINS->pins_num[3], OFF);
+		}
+		refresh_screen(&digits[0], right, left);
+	}
+	else refresh_screen(&digits[0], 1, 1);
+	if(systime - time_of_button1 > 50)
+		EXTI->IMR |= (0x1 << 9);
+	if(systime - time_of_button2 > 50)
+		EXTI->IMR |= (0x1 << 7);
+	if(systime - time_of_button3 > 50)
+		EXTI->IMR &= (0x1 << 6);
+	if(systime - time_of_button4 > 50)
+		EXTI->IMR |= (0x1 << 8);
 }
 
 void
-refresh_screen(uint8_t *vec)
+buttons_interr(void)
 {
-	turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], ON);
+	if(EXTI->PR & ~(Ox1 << 9)) {
+		time_of_button1 = systime;
+		state = SETTING_TIME;
+		EXTI->PR |= (0x1 << 9);
+		EXTI->IMR &= ~(0x1 << 9);
+	}
+	else
+	if(EXTI->PR & ~(0x1 << 7)) {
+		time_of_button2 = systime;
+		state = JUMP_BTW;
+		bflag2 = 1;
+		EXTI->PR |= (0x1 << 7);
+		EXTI->IMR &= ~(0x1 << 7);
+	}
+	else
+	if(EXTI->PR & ~(0x1 << 6)) {
+		time_of_button3 = systime;
+		EXTI->PR |= (0x1 << 6);
+		EXTI->IMR &= ~(0x1 << 6);
+	}
+	else
+	if(EXTI->PR & ~(0x1 << 8)) {
+		time_of_button4 = systime;
+		++nflag;
+		EXTI->PR |= (0x1 << 8);
+		EXTI->IMR &= ~(0x1 << 8);
+	}
+}
+
+void
+refresh_screen(uint8_t *vec, right, left)
+{
+	turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], ON & left);
 	light_dig(&ARRAY_PORTS, vec[0]);
 	turn_pin(POWER_PIN.FST, POWER_PIN.pins_num[0], OFF);
-	turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], ON);
+	turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], ON & left);
 	light_dig(&ARRAY_PORTS,vec[1]);
 	turn_pin(POWER_PIN.SND, POWER_PIN.pins_num[1], OFF);
-	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], ON);
+	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], ON & right);
 	light_dig(&ARRAY_PORTS, vec[2]);
 	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[2], OFF);
-	turn_pin(POWER_PIN.FRTH, POWER_PIN.pins_num[3], ON);
+	turn_pin(POWER_PIN.FRTH, POWER_PIN.pins_num[3], ON & right);
 	light_dig(&ARRAY_PORTS, vec[3]);
 	turn_pin(POWER_PIN.THRD, POWER_PIN.pins_num[3], OFF);
 }
 	
 void
-sys_inter(void)
+light_dot(struct GPIO* ptr, pins_num pin, uint8_t lg)
 {
-	
-uint8_t
-update_time(side val)
-{
-	uint32_t time;
-	time = cflag3 ? MIN: HOUR;
-	if(val == RIGHT) {
-		nflag = MOD(60, (nflag + 1));
-		return nflag;
-	}
-	else {
-		mflag = MOD(time, (mflag + 1));
-		return mflag;
-	}
-}
-
-void
-display(uint8_t time, struct ARRAYELECT* ptr, struct ARRAYGND* ARRAY_PORT, side sideflag)
-{
-	if(sideflag == RIGHT) {
-		turn_pin(ptr->FST, ptr->pins_num[0], ON);
-		light_dig(ARRAY_PORTS, MOD(10, time));
-		turn_pin(ptr->FST, ptr->pins_num[0], OFF);
-		turn_pin(ptr->SND, ptr->pins_num[1], ON);
-		ligth_dig(ARRAY_PORTS, (time - MOD(10, time)));
-		turn_pin(ptr->SND, ptr->pins_num[1], OFF);
-	}
-	else {
-		turn_pin(ptr->THRD, ptr->pins_num[2], ON);
-		light_dig(ARRAY_PORTS, MOD(10, time));
-		turn_pin(ptr->THRD, ptr->pins_num[2], OFF);
-		turn_pin(ptr->FRTH, ptr->pins_num[3], ON);
-		ligth_dig(ARRAY_PORTS, (time - MOD(10, time)));
-		turn_pin(ptr->FRTH, ptr->pins_num[3], OFF);
-	}
+	turn_pin(ptr, pin, lg);
+	light_dig(&ARRAY_PORTS, 10);
 }

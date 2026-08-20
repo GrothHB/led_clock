@@ -93,7 +93,7 @@ struct ARRAYGND {
 	struct GPIO* G;
 	struct GPIO* H;
 	struct GPIO* DOT;
-	volatile uint8_t pins_num[7];
+	volatile uint8_t pins_num[8];
 };
 
 struct ARRAYELECT {

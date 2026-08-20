@@ -3,6 +3,7 @@
 #include "sybmols.h"
 
 void reset_all(struct ARRAYGND* array);
+void dot(struct ARRAYGND* array);
 void dig0(struct ARRAYGND* array);
 void dig1(struct ARRAYGND* array);
 void dig2(struct ARRAYGND* array);

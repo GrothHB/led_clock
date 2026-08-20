@@ -12,6 +12,7 @@ void dig6(struct ARRAYGND* array);
 void dig7(struct ARRAYGND* array);
 void dig8(struct ARRAYGND* array);
 void dig9(struct ARRAYGND* array);
+void dot)strict ARRAYGND* array);
 
 #define MASK_ON(x, y) ( (x) &= ~(0x1 << (y)) )
 #define MASK_OFF(x, y) ( (x) |= (0x1 << (y)) )
@@ -59,6 +60,9 @@ light_dig(struct ARRAYGND* array, uint8_t num)
 		case 9:
 			dig9();
 			break;
+		default:
+			dot();
+			break;
 	}
 	reset_all();
 }
@@ -73,6 +77,20 @@ dig0(struct ARRAYGND* array)
 	MASK_OFF(array->F->ODR, array->pins_num[4]);
 	MASK_OFF(array->G->ODR, array->pins_num[5]);
 	MASK_OFF(array->H->ODR, array->pins_num[6]);
+	MASK_ON(array->DOT->ODR, array->pins_num[7]);
+}
+
+void
+dig0(struct ARRAYGND* array)
+{
+	MASK_OFF(array->A->ODR, array->pins_num[0]);
+	MASK_OFF(array->B->ODR, array->pins_num[1]);
+	MASK_OFF(array->C->ODR, array->pins_num[2]);
+	MASK_OFF(array->E->ODR, array->pins_num[3]);
+	MASK_OFF(array->F->ODR, array->pins_num[4]);
+	MASK_OFF(array->G->ODR, array->pins_num[5]);
+	MASK_OFF(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }
 
 void
@@ -85,6 +103,7 @@ dig1(struct ARRAYGND* array)
 	MASK_OFF(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }
 
 void
@@ -97,6 +116,7 @@ dig2(struct ARRAYGND* array)
 	MASK_ON(array->F->ODR, array->pins_num[4]);
 	MASK_OFF(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }
 
 void
@@ -109,6 +129,7 @@ dig3(struct ARRAYGND* array)
 	MASK_ON(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }, 
 
 void
@@ -121,6 +142,7 @@ dig4(struct ARRAYGND* array)
 	MASK_ON(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }
 
 void
@@ -133,6 +155,7 @@ dig5(struct ARRAYGND* array)
 	MASK_OFF(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }	
 
 void
@@ -145,6 +168,7 @@ dig6(struct ARRAYGND* array)
 	MASK_ON(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_OFF(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }	
 
 void
@@ -157,6 +181,7 @@ dig7(struct ARRAYGND* array)
 	MASK_OFF(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }	
 
 void
@@ -169,6 +194,7 @@ dig8(struct ARRAYGND* array)
 	MASK_ON(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }	
 
 void
@@ -181,6 +207,7 @@ dig9(struct ARRAYGND* array)
 	MASK_ON(array->F->ODR, array->pins_num[4]);
 	MASK_ON(array->G->ODR, array->pins_num[5]);
 	MASK_ON(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }	
 
 void
@@ -193,5 +220,5 @@ reset_all(struct ARRAYGND* array)
 	MASK_OFF(array->F->ODR, array->pins_num[4]);
 	MASK_OFF(array->G->ODR, array->pins_num[5]);
 	MASK_OFF(array->H->ODR, array->pins_num[6]);
+	MASK_OFF(array->DOT->ODR, array->pins_num[7]);
 }	
-	
