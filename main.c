@@ -41,6 +41,7 @@ main(void)
 	set_arraygnd(&ARRAY_PORTS, GPIOA, GPIOB);
 	set_power_pins(&POWER_PINS, GPIOA, GPIOB);
 	set_all_interr();
+	set_systick(TIME);
 	EXTI->IMR &= ~(0x1 << 7);
 	EXTI->IMR &= ~(0x1 << 6);
 	EXTI->IMR &= ~(0x1 << 5);
@@ -56,6 +57,9 @@ main(void)
 			case JUMP_BTW:
 				right ^= 0x1;
 				left ^= 0x1;
+				state = JUMP_BTW_WAIT;
+				break;
+			case JUMP_BTW_WAIT:
 				break;
 			case SET_TIME_SPEND:
 				bflag3 = MOD(2, (bflag3 + 1));

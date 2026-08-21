@@ -17,6 +17,7 @@ typedef enum {
 	NEUTRAL = 0,
 	SETTING_TIME,
 	JUMP_BTW,
+	JUMP_BTW_WAIT,
 	SET_TIME_SPEND,
 	SET,
 	SET_SEC,
