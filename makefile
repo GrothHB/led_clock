@@ -2,6 +2,7 @@ CC = arm-none-eabi-gcc
 LD = arm-none-eabi-ld
 OBJCOPY = arm-none-eabi-objcopy
 CFLAGS = -ffreestanding -Wall -Wextra -nostdlib -mcpu=cortex-m4 -mthumb -O0 -pedantic -ansi -gdwarf-4
+CFLAGS += -fdata-sections -Wl,--print-gc-section -std=c99
 LDFLAGS = -T linker.ld -nostdlib
 OBJS = isr_vector.o main.o handler.o hal.o hardware_laout.o led_clock.o utilites.o
 
@@ -15,3 +16,5 @@ firmware.elf:$(OBJS)
 .o:.c
 	$(CC) $(CFLAGS) -o $@ $<
 
+clean:
+	rm *.o 

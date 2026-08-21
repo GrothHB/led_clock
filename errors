@@ -1,3 +1,0 @@
-arm-none-eabi-gcc -ffreestanding -Wall -Wextra -nostdlib -mcpu=cortex-m4 -mthumb -O0 -pedantic -ansi -gdwarf-4  -c utilites.c
-arm-none-eabi-ld -T linker.ld -nostdlib -o firmware.elf isr_vector.o main.o handler.o hal.o hardware_laout.o led_clock.o utilites.o
-arm-none-eabi-objcopy -O binary firmware.elf firmware.bin

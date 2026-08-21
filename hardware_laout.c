@@ -12,8 +12,8 @@ set_all(volatile struct GPIO* ptr, volatile struct GPIO* ptr2)
 	set_moder(ptr, GENERAL, Px0);
 	set_moder(ptr, GENERAL, Px1);
 	set_moder(ptr2, GENERAL, Px0);
-	set_moder(ptr, GENERAL, Px3);
-	set_moder(ptr, GENERAL, Px2);
+	set_moder(ptr2, GENERAL, Px6);
+	set_moder(ptr2, GENERAL, Px9);
 	set_moder(ptr, GENERAL, Px10);
 	set_moder(ptr2, GENERAL, Px3);
 	set_moder(ptr2, GENERAL, Px8);
@@ -26,8 +26,8 @@ set_all(volatile struct GPIO* ptr, volatile struct GPIO* ptr2)
 	set_moder(ptr, GENERAL, Px8);
 
 
-	set_otyper(ptr, OPEN_DRAIN, Px3);
-	set_otyper(ptr, OPEN_DRAIN, Px2);
+	set_otyper(ptr2, OPEN_DRAIN, Px6);
+	set_otyper(ptr2, OPEN_DRAIN, Px9);
 	set_otyper(ptr, OPEN_DRAIN, Px10);
 	set_otyper(ptr2, OPEN_DRAIN, Px3);
 	set_otyper(ptr2, OPEN_DRAIN, Px8);
@@ -45,16 +45,16 @@ void
 set_arraygnd(volatile struct ARRAYGND* ptr, volatile struct GPIO* GPIOA, volatile struct GPIO* GPIOB)
 {
 	*ptr = (volatile struct ARRAYGND) {
-		.A = &GPIOA,
-		.B = &GPIOA,
-		.C = &GPIOA,
-		.E = &GPIOB,
-		.F = &GPIOB,
-		.G = &GPIOB,
-		.H = &GPIOB,
-		.DOT = &GPIOA,
+		.A = GPIOB,
+		.B = GPIOB,
+		.C = GPIOA,
+		.E = GPIOB,
+		.F = GPIOB,
+		.G = GPIOB,
+		.H = GPIOB,
+		.DOT = GPIOA,
 		.pins_num = { 
-			Px3, Px2, Px10, Px3, Px8,
+			Px9, Px6, Px10, Px3, Px8,
 			Px4, Px10, Px8
 		}
 	};
@@ -63,10 +63,10 @@ set_arraygnd(volatile struct ARRAYGND* ptr, volatile struct GPIO* GPIOA, volatil
 void
 set_all_interr(void)
 {
-	set_interr((uint8_t)'A', Px9, ON);
-	set_interr((uint8_t)'A', Px7, ON);
-	set_interr((uint8_t)'A', Px6, ON);
-	set_interr((uint8_t)'A', Px5, ON);
+	set_interr((uint8_t)'A', Px9);
+	set_interr((uint8_t)'A', Px7);
+	set_interr((uint8_t)'A', Px6);
+	set_interr((uint8_t)'A', Px5);
 }
 
 void

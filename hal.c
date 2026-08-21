@@ -1,7 +1,8 @@
-#include "basic_mapping.h"
 #include <stdint.h>
+#include "basic_mapping.h"
 #include "symbols.h"
 #include "utilites.h"
+#include "mod.h"
 
 void
 set_power_port(uint8_t port, uint8_t state, volatile struct GPIO** gpio)
@@ -86,28 +87,28 @@ set_interr(uint8_t port_name, pins_num pin_num)
 		SYSCFG->EXTICR1 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 		EXTI->IMR |= (1 << pin_num);
 		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
+		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << mod(32, array_exti[pin_num]));
 	}
 	else
 	if(pin_num >= 4 && pin_num <= 7) {
-		SYSCFG->EXTICR2 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
+		SYSCFG->EXTICR2 = (SYSCFG->EXTICR2 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 		EXTI->IMR |= (1 << pin_num);
 		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
+		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << mod(32, array_exti[pin_num]));
 	}
 	else
 	if(pin_num >= 8 && pin_num <= 11) {
-		SYSCFG->EXTICR3 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
+		SYSCFG->EXTICR3 = (SYSCFG->EXTICR3 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 		EXTI->IMR |= (1 << pin_num);
 		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
+		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << mod(32, array_exti[pin_num]));
 	}
 	else
 	if(pin_num >= 12 && pin_num <= 15) {
-		SYSCFG->EXTICR4 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
+		SYSCFG->EXTICR4 = (SYSCFG->EXTICR4 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 		EXTI->IMR |= (1 << pin_num);
 		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
+		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << mod(32, array_exti[pin_num]));
 	}
 }
 

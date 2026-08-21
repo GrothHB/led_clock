@@ -11,14 +11,29 @@ SECTIONS
 	{
 		KEEP(*(.isr_vector))
 		*(.text)
+		*(.text.*)
+	} > FLASH
+	.rodata :
+	{
+		. = ALIGN(4); 	/* To make sure that addresses
+				 * would be by 4 bytes
+				 */
+		*(.rodata*)
+		. = ALIGN(4);
 	} > FLASH
 	_la_data = LOADADDR(.data);
 	.data :
 	{
 		_sdata = .;
-		*(.data)
+		*(.data*)
 		_edata = .;
-		*(.bss)
-		_ebss = .;
 	} > SRAM AT > FLASH
+	.bss :
+	{
+		_sbss = .;
+		*(.bss)
+		*(.bss.*)
+		*(COMMON)
+		_ebss = .;
+	} > SRAM
 }

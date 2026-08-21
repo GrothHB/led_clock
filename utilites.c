@@ -14,3 +14,9 @@ __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 
 	return result;
 }
+
+void
+trap(void)
+{
+	for(;;);
+}
