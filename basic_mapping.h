@@ -90,22 +90,22 @@ struct EXTI_type {
 #define EXTI ((struct EXTI_type*)0x40013C00)
 
 struct ARRAYGND {
-	struct GPIO* A;
-	struct GPIO* B;
-	struct GPIO* C;
-	struct GPIO* E;
-	struct GPIO* F;
-	struct GPIO* G;
-	struct GPIO* H;
-	struct GPIO* DOT;
+	volatile struct GPIO* A;
+	volatile struct GPIO* B;
+	volatile struct GPIO* C;
+	volatile struct GPIO* E;
+	volatile struct GPIO* F;
+	volatile struct GPIO* G;
+	volatile struct GPIO* H;
+	volatile struct GPIO* DOT;
 	volatile uint8_t pins_num[8];
 };
 
 struct ARRAYELECT {
-	struct GPIO* FST;
-	struct GPIO* SND;
-	struct GPIO* THRD;
-	struct GPIO* FRTH;
+	volatile struct GPIO* FST;
+	volatile struct GPIO* SND;
+	volatile struct GPIO* THRD;
+	volatile struct GPIO* FRTH;
 	volatile pins_num pins_num[4];
 };
 

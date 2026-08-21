@@ -4,20 +4,20 @@
 #include "utilites.h"
 
 void
-set_power_port(uint8_t port, uint8_t state, struct GPIO* gpio)
+set_power_port(uint8_t port, uint8_t state, volatile struct GPIO** gpio)
 {
 	uint8_t off_set = port - (uint8_t)'A';
-	if(state && (off_set > 0 && off_set < 5)) {
+	if(state && off_set <= 5) {
 		RCC->AHB1ENR |= (1 << off_set);
-		gpio = (struct GPIO*)(0x40020000 + (0x400 * off_set));
+		*gpio = (volatile struct GPIO*)(0x40020000 + (0x400 * off_set));
 	}
 	else 
-	if(off_set > 0 && off_set < 5)
+	if(off_set <= 5)
 		RCC->AHB1ENR &= ~(1 << off_set);
 }
 
 void
-set_moder(struct GPIO* reg, pinconf IO_purp, pins_num pin_num)
+set_moder(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
 	reg->MODER = reg->MODER & ~((1 << (new_pin_num + 1)) | (1 << new_pin_num) );
@@ -32,7 +32,7 @@ set_moder(struct GPIO* reg, pinconf IO_purp, pins_num pin_num)
 }
 
 void
-set_otyper(struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
+set_otyper(volatile struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
 {
 	if(IO_purp == PUSH_PULL)
 		reg->OTYPER &= ~(1 << pin_num);
@@ -41,7 +41,7 @@ set_otyper(struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
 }
 
 void
-set_pupdr(struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
+set_pupdr(volatile struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
 	if(IO_purp == PULL_UP)
@@ -63,7 +63,7 @@ set_systick(uint32_t time)
 }
 
 void
-switches_port(struct GPIO* reg, pins_num pin_num, uint8_t state)
+switches_port(volatile struct GPIO* reg, pins_num pin_num, uint8_t state)
 {
 	if(state)
 		reg->ODR |= (1 << pin_num);
@@ -72,7 +72,7 @@ switches_port(struct GPIO* reg, pins_num pin_num, uint8_t state)
 }
 
 void
-set_interr(uint8_t port_name, pins_num pin_num, uint8_t state)
+set_interr(uint8_t port_name, pins_num pin_num)
 {
 	uint8_t array_exti[] = {
 		6, 7, 8, 9, 10,
@@ -82,7 +82,7 @@ set_interr(uint8_t port_name, pins_num pin_num, uint8_t state)
 	uint8_t off_set_name = (port_name - (uint8_t)'A');
 	uint8_t off_set_bit = off_set_name * 4;
 	RCC->APB2ENR |= (1 << 14);
-	if(pin_num >= 0 && pin_num <= 3) {
+	if(pin_num <= 3) {
 		SYSCFG->EXTICR1 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 		EXTI->IMR |= (1 << pin_num);
 		EXTI->RTSR |= (1 << pin_num);

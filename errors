@@ -1,677 +1,86 @@
-arm-none-eabi-gcc -ffreestanding -Wall -Wextra -nostdlib -mcpu=cortex-m4 -mthumb -O0 -pedantic -ansi -gdwarf-4  -c main.c
-main.c: In function 'main':
-main.c:32:17: warning: excess elements in scalar initializer
-   32 |                 0,
+arm-none-eabi-gcc -ffreestanding -Wall -Wextra -nostdlib -mcpu=cortex-m4 -mthumb -O0 -pedantic -ansi -gdwarf-4  -c hal.c
+arm-none-eabi-gcc -ffreestanding -Wall -Wextra -nostdlib -mcpu=cortex-m4 -mthumb -O0 -pedantic -ansi -gdwarf-4  -c hardware_laout.c
+hardware_laout.c: In function 'set_arraygnd':
+hardware_laout.c:48:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   48 |                 .A = &GPIOA,
       |                 ^
-main.c:32:17: note: (near initialization for '(anonymous)')
-main.c:33:17: warning: excess elements in scalar initializer
-   33 |                 0,
+hardware_laout.c:48:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   48 |                 .A = &GPIOA,
+      |                      ^
+hardware_laout.c:48:22: note: (near initialization for '(anonymous).A')
+hardware_laout.c:49:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   49 |                 .B = &GPIOA,
       |                 ^
-main.c:33:17: note: (near initialization for '(anonymous)')
-main.c:34:17: warning: excess elements in scalar initializer
-   34 |                 0
+hardware_laout.c:49:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   49 |                 .B = &GPIOA,
+      |                      ^
+hardware_laout.c:49:22: note: (near initialization for '(anonymous).B')
+hardware_laout.c:50:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   50 |                 .C = &GPIOA,
       |                 ^
-main.c:34:17: note: (near initialization for '(anonymous)')
-main.c:30:29: warning: ISO C90 forbids compound literals [-Wpedantic]
-   30 |         *digits = (uint8_t) {
-      |                             ^
-main.c:40:33: warning: passing argument 3 of 'set_power_port' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   40 |         set_power_port('A', ON, &GPIOA);
-      |                                 ^~~~~~
-In file included from main.c:3:
-hal.h:9:63: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    9 | void set_power_port(uint8_t port, uint8_t state, struct GPIO* gpio);
-      |                                                  ~~~~~~~~~~~~~^~~~
-main.c:41:33: warning: passing argument 3 of 'set_power_port' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   41 |         set_power_port('A', ON, &GPIOB);
-      |                                 ^~~~~~
-hal.h:9:63: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    9 | void set_power_port(uint8_t port, uint8_t state, struct GPIO* gpio);
-      |                                                  ~~~~~~~~~~~~~^~~~
-main.c:42:17: warning: passing argument 1 of 'set_all' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   42 |         set_all(&GPIOA, &GPIOB);
-      |                 ^~~~~~
-In file included from main.c:6:
-hardware_laout.h:5:27: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    5 | void set_all(struct GPIO* ptr, struct GPIO* ptr2);
-      |              ~~~~~~~~~~~~~^~~
-main.c:42:25: warning: passing argument 2 of 'set_all' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   42 |         set_all(&GPIOA, &GPIOB);
-      |                         ^~~~~~
-hardware_laout.h:5:45: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    5 | void set_all(struct GPIO* ptr, struct GPIO* ptr2);
-      |                                ~~~~~~~~~~~~~^~~~
-main.c:43:22: warning: passing argument 1 of 'set_arraygnd' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   43 |         set_arraygnd(&ARRAY_PORTS, &GPIOA, &GPIOB);
-      |                      ^~~~~~~~~~~~
-hardware_laout.h:6:36: note: expected 'struct ARRAYGND *' but argument is of type 'volatile struct ARRAYGND *'
-    6 | void set_arraygnd(struct ARRAYGND* ptr, struct GPIO* fst, struct GPIO* snd);
-      |                   ~~~~~~~~~~~~~~~~~^~~
-main.c:43:36: warning: passing argument 2 of 'set_arraygnd' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   43 |         set_arraygnd(&ARRAY_PORTS, &GPIOA, &GPIOB);
-      |                                    ^~~~~~
-hardware_laout.h:6:54: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    6 | void set_arraygnd(struct ARRAYGND* ptr, struct GPIO* fst, struct GPIO* snd);
-      |                                         ~~~~~~~~~~~~~^~~
-main.c:43:44: warning: passing argument 3 of 'set_arraygnd' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   43 |         set_arraygnd(&ARRAY_PORTS, &GPIOA, &GPIOB);
-      |                                            ^~~~~~
-hardware_laout.h:6:72: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    6 | void set_arraygnd(struct ARRAYGND* ptr, struct GPIO* fst, struct GPIO* snd);
-      |                                                           ~~~~~~~~~~~~~^~~
-main.c:44:24: warning: passing argument 1 of 'set_power_pins' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   44 |         set_power_pins(&POWER_PINS, &GPIOA, &GPIOB);
-      |                        ^~~~~~~~~~~
-hardware_laout.h:8:40: note: expected 'struct ARRAYELECT *' but argument is of type 'volatile struct ARRAYELECT *'
-    8 | void set_power_pins(struct ARRAYELECT* ptr, struct GPIO* gpioa, struct GPIO* gpiob);
-      |                     ~~~~~~~~~~~~~~~~~~~^~~
-main.c:44:37: warning: passing argument 2 of 'set_power_pins' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   44 |         set_power_pins(&POWER_PINS, &GPIOA, &GPIOB);
-      |                                     ^~~~~~
-hardware_laout.h:8:58: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    8 | void set_power_pins(struct ARRAYELECT* ptr, struct GPIO* gpioa, struct GPIO* gpiob);
-      |                                             ~~~~~~~~~~~~~^~~~~
-main.c:44:45: warning: passing argument 3 of 'set_power_pins' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   44 |         set_power_pins(&POWER_PINS, &GPIOA, &GPIOB);
-      |                                             ^~~~~~
-hardware_laout.h:8:78: note: expected 'struct GPIO *' but argument is of type 'volatile struct GPIO *'
-    8 | void set_power_pins(struct ARRAYELECT* ptr, struct GPIO* gpioa, struct GPIO* gpiob);
-      |                                                                 ~~~~~~~~~~~~~^~~~~
-In file included from hal.h:7:
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:54:42: note: in expansion of macro 'MOD'
-   54 |                                 bflag1 = MOD(2, (bflag1 + 1));
-      |                                          ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:63:42: note: in expansion of macro 'MOD'
-   63 |                                 bflag3 = MOD(2, (bflag3 + 1));
-      |                                          ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:72:56: note: in expansion of macro 'MOD'
-   72 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 1000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:72:46: note: in expansion of macro 'MOD'
-   72 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 1000))));
-      |                                              ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:72:56: note: in expansion of macro 'MOD'
-   72 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 1000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:72:46: note: in expansion of macro 'MOD'
-   72 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 1000))));
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:73:46: note: in expansion of macro 'MOD'
-   73 |                                 digits[1] = (MOD(60, (tflag / 1000))) / 10;
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:74:56: note: in expansion of macro 'MOD'
-   74 |                                 digits[2] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:74:46: note: in expansion of macro 'MOD'
-   74 |                                 digits[2] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                              ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:74:56: note: in expansion of macro 'MOD'
-   74 |                                 digits[2] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:74:46: note: in expansion of macro 'MOD'
-   74 |                                 digits[2] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:75:47: note: in expansion of macro 'MOD'
-   75 |                                 digits[3] =  (MOD(60, (tflag / 60000))) / 10;
-      |                                               ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:78:56: note: in expansion of macro 'MOD'
-   78 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:78:46: note: in expansion of macro 'MOD'
-   78 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                              ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:78:56: note: in expansion of macro 'MOD'
-   78 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:78:46: note: in expansion of macro 'MOD'
-   78 |                                 digits[0] =  MOD(10 , (MOD(60, (tflag / 60000))));
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:79:46: note: in expansion of macro 'MOD'
-   79 |                                 digits[1] = (MOD(60, tflag / 60000)) / 10;
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:80:56: note: in expansion of macro 'MOD'
-   80 |                                 digits[2] =  MOD(10 , (MOD(24, (tflag / 360000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:80:46: note: in expansion of macro 'MOD'
-   80 |                                 digits[2] =  MOD(10 , (MOD(24, (tflag / 360000))));
-      |                                              ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:80:56: note: in expansion of macro 'MOD'
-   80 |                                 digits[2] =  MOD(10 , (MOD(24, (tflag / 360000))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:80:46: note: in expansion of macro 'MOD'
-   80 |                                 digits[2] =  MOD(10 , (MOD(24, (tflag / 360000))));
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:81:47: note: in expansion of macro 'MOD'
-   81 |                                 digits[3] =  (MOD(24, (tflag / 360000))) / 10;
-      |                                               ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:84:54: note: in expansion of macro 'MOD'
-   84 |                                 digits[0] = MOD(10, (MOD(60, nflag)));
-      |                                                      ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:84:45: note: in expansion of macro 'MOD'
-   84 |                                 digits[0] = MOD(10, (MOD(60, nflag)));
-      |                                             ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:84:54: note: in expansion of macro 'MOD'
-   84 |                                 digits[0] = MOD(10, (MOD(60, nflag)));
-      |                                                      ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:84:45: note: in expansion of macro 'MOD'
-   84 |                                 digits[0] = MOD(10, (MOD(60, nflag)));
-      |                                             ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:85:46: note: in expansion of macro 'MOD'
-   85 |                                 digits[1] = (MOD(60, nflag)) / 10;
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:86:45: note: in expansion of macro 'MOD'
-   86 |                                 digits[2] = MOD(60, (nflag / 60));
-      |                                             ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:87:46: note: in expansion of macro 'MOD'
-   87 |                                 digits[3] = (MOD(60, (nflag / 60))) / 10;
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:90:56: note: in expansion of macro 'MOD'
-   90 |                                 digits[0] =  MOD(10 , (MOD(60, nflag)));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:90:46: note: in expansion of macro 'MOD'
-   90 |                                 digits[0] =  MOD(10 , (MOD(60, nflag)));
-      |                                              ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:90:56: note: in expansion of macro 'MOD'
-   90 |                                 digits[0] =  MOD(10 , (MOD(60, nflag)));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:90:46: note: in expansion of macro 'MOD'
-   90 |                                 digits[0] =  MOD(10 , (MOD(60, nflag)));
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:91:46: note: in expansion of macro 'MOD'
-   91 |                                 digits[1] = (MOD(60, nflag)) / 10;
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:9:21: note: in definition of macro 'MOD'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                     ^
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:92:56: note: in expansion of macro 'MOD'
-   92 |                                 digits[2] =  MOD(10 , (MOD(24, (nflag / 60))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:8:45: note: in definition of macro 'DIV'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                             ^
-main.c:92:46: note: in expansion of macro 'MOD'
-   92 |                                 digits[2] =  MOD(10 , (MOD(24, (nflag / 60))));
-      |                                              ^~~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:92:56: note: in expansion of macro 'MOD'
-   92 |                                 digits[2] =  MOD(10 , (MOD(24, (nflag / 60))));
-      |                                                        ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:92:46: note: in expansion of macro 'MOD'
-   92 |                                 digits[2] =  MOD(10 , (MOD(24, (nflag / 60))));
-      |                                              ^~~
-utilites.h:6:22: warning: left shift count >= width of type [-Wshift-count-overflow]
-    6 | #define POWER32 (1UL << 32)
-      |                      ^~
-utilites.h:7:24: note: in expansion of macro 'POWER32'
-    7 | #define MAGIC_NUM(k) ( POWER32 / (k) )
-      |                        ^~~~~~~
-utilites.h:8:50: note: in expansion of macro 'MAGIC_NUM'
-    8 | #define DIV(k, n) ( (uint32_t)( ((uint64_t)(n) * MAGIC_NUM(k)) >> 32 ))
-      |                                                  ^~~~~~~~~
-utilites.h:9:27: note: in expansion of macro 'DIV'
-    9 | #define MOD(k, n) ((n) - (DIV(k, n) * (k)))
-      |                           ^~~
-main.c:93:47: note: in expansion of macro 'MOD'
-   93 |                                 digits[3] =  (MOD(24, (nflag / 60))) / 10;
-      |                                               ^~~
-main.c: In function 'systick_interr':
-main.c:115:40: warning: passing argument 1 of 'refresh_screen' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  115 |                         refresh_screen(&digits[0], ON, ON);
-      |                                        ^~~~~~~~~~
-main.c:16:30: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile uint8_t *' {aka 'volatile unsigned char *'}
-   16 | void refresh_screen(uint8_t *vec, uint8_t, uint8_t);
-      |                     ~~~~~~~~~^~~
-main.c:119:40: warning: passing argument 1 of 'refresh_screen' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  119 |                         refresh_screen(&digits[0], right, left);
-      |                                        ^~~~~~~~~~
-main.c:16:30: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile uint8_t *' {aka 'volatile unsigned char *'}
-   16 | void refresh_screen(uint8_t *vec, uint8_t, uint8_t);
-      |                     ~~~~~~~~~^~~
-main.c:121:29: warning: passing argument 1 of 'refresh_screen' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  121 |         else refresh_screen(&digits[0], ON, ON);
-      |                             ^~~~~~~~~~
-main.c:16:30: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile uint8_t *' {aka 'volatile unsigned char *'}
-   16 | void refresh_screen(uint8_t *vec, uint8_t, uint8_t);
-      |                     ~~~~~~~~~^~~
-main.c: In function 'refresh_screen':
-main.c:178:19: warning: passing argument 1 of 'light_dig' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  178 |         light_dig(&ARRAY_PORTS, vec[0]);
-      |                   ^~~~~~~~~~~~
-In file included from main.c:5:
-led_clock.h:24:33: note: expected 'struct ARRAYGND *' but argument is of type 'volatile struct ARRAYGND *'
-   24 | void light_dig(struct ARRAYGND* array, uint8_t num);
-      |                ~~~~~~~~~~~~~~~~~^~~~~
-main.c:181:19: warning: passing argument 1 of 'light_dig' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  181 |         light_dig(&ARRAY_PORTS,vec[1]);
-      |                   ^~~~~~~~~~~~
-led_clock.h:24:33: note: expected 'struct ARRAYGND *' but argument is of type 'volatile struct ARRAYGND *'
-   24 | void light_dig(struct ARRAYGND* array, uint8_t num);
-      |                ~~~~~~~~~~~~~~~~~^~~~~
-main.c:186:19: warning: passing argument 1 of 'light_dig' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  186 |         light_dig(&ARRAY_PORTS, vec[2]);
-      |                   ^~~~~~~~~~~~
-led_clock.h:24:33: note: expected 'struct ARRAYGND *' but argument is of type 'volatile struct ARRAYGND *'
-   24 | void light_dig(struct ARRAYGND* array, uint8_t num);
-      |                ~~~~~~~~~~~~~~~~~^~~~~
-main.c:189:19: warning: passing argument 1 of 'light_dig' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  189 |         light_dig(&ARRAY_PORTS, vec[3]);
-      |                   ^~~~~~~~~~~~
-led_clock.h:24:33: note: expected 'struct ARRAYGND *' but argument is of type 'volatile struct ARRAYGND *'
-   24 | void light_dig(struct ARRAYGND* array, uint8_t num);
-      |                ~~~~~~~~~~~~~~~~~^~~~~
-main.c: In function 'light_dot':
-main.c:197:19: warning: passing argument 1 of 'light_dig' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  197 |         light_dig(&ARRAY_PORTS, 10);
-      |                   ^~~~~~~~~~~~
-led_clock.h:24:33: note: expected 'struct ARRAYGND *' but argument is of type 'volatile struct ARRAYGND *'
-   24 | void light_dig(struct ARRAYGND* array, uint8_t num);
-      |                ~~~~~~~~~~~~~~~~~^~~~~
+hardware_laout.c:50:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   50 |                 .C = &GPIOA,
+      |                      ^
+hardware_laout.c:50:22: note: (near initialization for '(anonymous).C')
+hardware_laout.c:51:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   51 |                 .E = &GPIOB,
+      |                 ^
+hardware_laout.c:51:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   51 |                 .E = &GPIOB,
+      |                      ^
+hardware_laout.c:51:22: note: (near initialization for '(anonymous).E')
+hardware_laout.c:52:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   52 |                 .F = &GPIOB,
+      |                 ^
+hardware_laout.c:52:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   52 |                 .F = &GPIOB,
+      |                      ^
+hardware_laout.c:52:22: note: (near initialization for '(anonymous).F')
+hardware_laout.c:53:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   53 |                 .G = &GPIOB,
+      |                 ^
+hardware_laout.c:53:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   53 |                 .G = &GPIOB,
+      |                      ^
+hardware_laout.c:53:22: note: (near initialization for '(anonymous).G')
+hardware_laout.c:54:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   54 |                 .H = &GPIOB,
+      |                 ^
+hardware_laout.c:54:22: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   54 |                 .H = &GPIOB,
+      |                      ^
+hardware_laout.c:54:22: note: (near initialization for '(anonymous).H')
+hardware_laout.c:55:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   55 |                 .DOT = &GPIOA,
+      |                 ^
+hardware_laout.c:55:24: warning: initialization of 'volatile struct GPIO *' from incompatible pointer type 'volatile struct GPIO **' [-Wincompatible-pointer-types]
+   55 |                 .DOT = &GPIOA,
+      |                        ^
+hardware_laout.c:55:24: note: (near initialization for '(anonymous).DOT')
+hardware_laout.c:56:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   56 |                 .pins_num = {
+      |                 ^
+hardware_laout.c:47:43: warning: ISO C90 forbids compound literals [-Wpedantic]
+   47 |         *ptr = (volatile struct ARRAYGND) {
+      |                                           ^
+hardware_laout.c: In function 'set_power_pins':
+hardware_laout.c:76:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   76 |                 .FST = GPIOA,
+      |                 ^
+hardware_laout.c:77:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   77 |                 .SND = GPIOA,
+      |                 ^
+hardware_laout.c:78:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   78 |                 .THRD = GPIOA,
+      |                 ^
+hardware_laout.c:79:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   79 |                 .FRTH = GPIOB,
+      |                 ^
+hardware_laout.c:80:17: warning: ISO C90 forbids specifying subobject to initialize [-Wpedantic]
+   80 |                 .pins_num = { Px4, Px0, Px1, Px0 }
+      |                 ^
+hardware_laout.c:75:53: warning: ISO C90 forbids compound literals [-Wpedantic]
+   75 |         *power_array = (volatile struct ARRAYELECT) {
+      |                                                     ^
 arm-none-eabi-ld -T linker.ld -nostdlib -o firmware.elf isr_vector.o main.o handler.o hal.o hardware_laout.o led_clock.o utilites.o
 arm-none-eabi-objcopy -O binary firmware.elf firmware.bin

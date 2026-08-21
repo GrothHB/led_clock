@@ -3,22 +3,22 @@
 #include "basic_mapping.h"
 #include "utilites.h"
 
-void reset_all(struct ARRAYGND* array);
-void dig0(struct ARRAYGND* array);
-void dig1(struct ARRAYGND* array);
-void dig2(struct ARRAYGND* array);
-void dig3(struct ARRAYGND* array);
-void dig4(struct ARRAYGND* array);
-void dig5(struct ARRAYGND* array);
-void dig6(struct ARRAYGND* array);
-void dig7(struct ARRAYGND* array);
-void dig8(struct ARRAYGND* array);
-void dig9(struct ARRAYGND* array);
-void dot(struct ARRAYGND* array);
+void reset_all(volatile struct ARRAYGND* array);
+void dig0(volatile struct ARRAYGND* array);
+void dig1(volatile struct ARRAYGND* array);
+void dig2(volatile struct ARRAYGND* array);
+void dig3(volatile struct ARRAYGND* array);
+void dig4(volatile struct ARRAYGND* array);
+void dig5(volatile struct ARRAYGND* array);
+void dig6(volatile struct ARRAYGND* array);
+void dig7(volatile struct ARRAYGND* array);
+void dig8(volatile struct ARRAYGND* array);
+void dig9(volatile struct ARRAYGND* array);
+void dot(volatile struct ARRAYGND* array);
 
 
 void
-turn_pin(struct GPIO* port_electr,pins_num pin_electr_num, uint8_t state)
+turn_pin(volatile struct GPIO* port_electr,pins_num pin_electr_num, uint8_t state)
 {
 	if(state)
 		port_electr->ODR |= (0x1 << pin_electr_num);
@@ -27,7 +27,7 @@ turn_pin(struct GPIO* port_electr,pins_num pin_electr_num, uint8_t state)
 }
 
 void
-light_dig(struct ARRAYGND* array, uint8_t num)
+light_dig(volatile struct ARRAYGND* array, uint8_t num)
 {
 	switch (num) {
 		case 0:
@@ -68,7 +68,7 @@ light_dig(struct ARRAYGND* array, uint8_t num)
 }
 
 void
-dot(struct ARRAYGND* array)
+dot(volatile struct ARRAYGND* array)
 {
 	MASK_OFF(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
@@ -81,7 +81,7 @@ dot(struct ARRAYGND* array)
 }
 
 void
-dig0(struct ARRAYGND* array)
+dig0(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_ON(array->B->ODR, array->pins_num[1]);
@@ -94,7 +94,7 @@ dig0(struct ARRAYGND* array)
 }
 
 void
-dig1(struct ARRAYGND* array)
+dig1(volatile struct ARRAYGND* array)
 {
 	MASK_OFF(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
@@ -107,7 +107,7 @@ dig1(struct ARRAYGND* array)
 }
 
 void
-dig2(struct ARRAYGND* array)
+dig2(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
@@ -120,7 +120,7 @@ dig2(struct ARRAYGND* array)
 }
 
 void
-dig3(struct ARRAYGND* array)
+dig3(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
@@ -133,7 +133,7 @@ dig3(struct ARRAYGND* array)
 } 
 
 void
-dig4(struct ARRAYGND* array)
+dig4(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
@@ -146,7 +146,7 @@ dig4(struct ARRAYGND* array)
 }
 
 void
-dig5(struct ARRAYGND* array)
+dig5(volatile struct ARRAYGND* array)
 {
 	MASK_OFF(array->A->ODR, array->pins_num[0]);
 	MASK_ON(array->B->ODR, array->pins_num[1]);
@@ -159,7 +159,7 @@ dig5(struct ARRAYGND* array)
 }	
 
 void
-dig6(struct ARRAYGND* array)
+dig6(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_ON(array->B->ODR, array->pins_num[1]);
@@ -172,7 +172,7 @@ dig6(struct ARRAYGND* array)
 }	
 
 void
-dig7(struct ARRAYGND* array)
+dig7(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
@@ -185,7 +185,7 @@ dig7(struct ARRAYGND* array)
 }	
 
 void
-dig8(struct ARRAYGND* array)
+dig8(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_ON(array->B->ODR, array->pins_num[1]);
@@ -198,7 +198,7 @@ dig8(struct ARRAYGND* array)
 }	
 
 void
-dig9(struct ARRAYGND* array)
+dig9(volatile struct ARRAYGND* array)
 {
 	MASK_ON(array->A->ODR, array->pins_num[0]);
 	MASK_ON(array->B->ODR, array->pins_num[1]);
@@ -211,7 +211,7 @@ dig9(struct ARRAYGND* array)
 }	
 
 void
-reset_all(struct ARRAYGND* array)
+reset_all(volatile struct ARRAYGND* array)
 {
 	MASK_OFF(array->A->ODR, array->pins_num[0]);
 	MASK_OFF(array->B->ODR, array->pins_num[1]);
