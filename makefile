@@ -12,6 +12,11 @@ firmware.elf:$(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJS)
 .SUFFIXES:
 .SUFFIXES: .c .o
-.o:.c
-	$(CC) $(CFLAGS) -o $@ $<
+.c.o:
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJS): basic_mapping.h symbols.h utilites.h
+
+clean:
+	rm -f $(OBJS) firmware.elf firmware.bin
 

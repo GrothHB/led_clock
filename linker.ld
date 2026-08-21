@@ -11,6 +11,9 @@ SECTIONS
 	{
 		KEEP(*(.isr_vector))
 		*(.text)
+		*(.text*)
+		*(.rodata)
+		*(.rodata*)
 	} > FLASH
 	_la_data = LOADADDR(.data);
 	.data :
@@ -19,6 +22,7 @@ SECTIONS
 		*(.data)
 		_edata = .;
 		*(.bss)
+		*(COMMON)
 		_ebss = .;
 	} > SRAM AT > FLASH
 }

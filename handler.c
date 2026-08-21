@@ -22,3 +22,10 @@ void handler(void)
 	}
 	main();
 }
+
+void
+trap(void)
+{
+	for(;;)
+		;
+}

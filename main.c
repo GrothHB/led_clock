@@ -79,13 +79,13 @@ main(void)
 			case ADD_MIN:
 				digits[0] =  MOD(10 , (MOD(60, (tflag / 60000))));
 				digits[1] = (MOD(60, tflag / 60000)) / 10;
-				digits[2] =  MOD(10 , (MOD(24, (tflag / 360000))));
-				digits[3] =  (MOD(24, (tflag / 360000))) / 10;
+				digits[2] =  MOD(10 , (MOD(24, (tflag / 3600000))));
+				digits[3] =  (MOD(24, (tflag / 3600000))) / 10;
 				break;
 			case SET_SEC:
 				digits[0] = MOD(10, (MOD(60, nflag)));
 				digits[1] = (MOD(60, nflag)) / 10;
-				digits[2] = MOD(60, (nflag / 60));
+				digits[2] = MOD(10, (MOD(60, (nflag / 60))));
 				digits[3] = (MOD(60, (nflag / 60))) / 10;
 				break;
 			case SET_MIN:
@@ -126,7 +126,7 @@ systick_interr(void)
 	if(systime - time_of_button2 > 50)
 		EXTI->IMR |= (0x1 << 7);
 	if(systime - time_of_button3 > 50)
-		EXTI->IMR &= (0x1 << 6);
+		EXTI->IMR |= (0x1 << 6);
 	if(systime - time_of_button4 > 50)
 		EXTI->IMR |= (0x1 << 8);
 }
@@ -134,7 +134,7 @@ systick_interr(void)
 void
 buttons_interr(void)
 {
-	if(EXTI->PR & ~(0x1 << 9)) {
+	if(EXTI->PR & (0x1 << 9)) {
 		time_of_button1 = systime;
 		state = SETTING_TIME;
 		EXTI->PR |= (0x1 << 9);
@@ -151,7 +151,7 @@ buttons_interr(void)
 		}
 	}
 	else
-	if(EXTI->PR & ~(0x1 << 7)) {
+	if(EXTI->PR & (0x1 << 7)) {
 		time_of_button2 = systime;
 		state = JUMP_BTW;
 		bflag2 = 1;
@@ -159,13 +159,13 @@ buttons_interr(void)
 		EXTI->IMR &= ~(0x1 << 7);
 	}
 	else
-	if(EXTI->PR & ~(0x1 << 6)) {
+	if(EXTI->PR & (0x1 << 6)) {
 		time_of_button3 = systime;
 		EXTI->PR |= (0x1 << 6);
 		EXTI->IMR &= ~(0x1 << 6);
 	}
 	else
-	if(EXTI->PR & ~(0x1 << 5)) {
+	if(EXTI->PR & (0x1 << 5)) {
 		time_of_button4 = systime;
 		++nflag;
 		EXTI->PR |= (0x1 << 5);
@@ -189,7 +189,7 @@ refresh_screen(volatile uint8_t *vec, uint8_t right, uint8_t left)
 	turn_pin(POWER_PINS.THRD, POWER_PINS.pins_num[2], OFF);
 	turn_pin(POWER_PINS.FRTH, POWER_PINS.pins_num[3], ON & left) ;
 	light_dig(&ARRAY_PORTS, vec[3]);
-	turn_pin(POWER_PINS.THRD, POWER_PINS.pins_num[3], OFF);
+	turn_pin(POWER_PINS.FRTH, POWER_PINS.pins_num[3], OFF);
 }
 	
 void

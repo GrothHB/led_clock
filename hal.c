@@ -1,4 +1,5 @@
 #include "basic_mapping.h"
+#include "hal.h"
 #include <stdint.h>
 #include "symbols.h"
 #include "utilites.h"
@@ -32,7 +33,7 @@ set_moder(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num)
 }
 
 void
-set_otyper(volatile struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
+set_otyper(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num)
 {
 	if(IO_purp == PUSH_PULL)
 		reg->OTYPER &= ~(1 << pin_num);
@@ -41,7 +42,7 @@ set_otyper(volatile struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
 }
 
 void
-set_pupdr(volatile struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
+set_pupdr(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num)
 {
 	uint8_t new_pin_num = pin_num << 1;
 	if(IO_purp == PULL_UP)
@@ -57,8 +58,8 @@ set_pupdr(volatile struct GPIO* reg, pinconf IO_purp, uint32_t pin_num)
 void
 set_systick(uint32_t time)
 {
-	STK->VAL &= ~(0xF << 24);
-	STK->LOAD = (STK->LOAD & ~(0xF << 24)) | time;
+	STK->LOAD = (time - 1) & 0xFFFFFF;
+	STK->VAL = 0;
 	STK->CTRL |= (1 << 0) | (1 << 1) | (1 << 2);
 }
 
@@ -72,7 +73,7 @@ switches_port(volatile struct GPIO* reg, pins_num pin_num, uint8_t state)
 }
 
 void
-set_interr(uint8_t port_name, pins_num pin_num)
+set_interr(uint8_t port_name, pins_num pin_num, uint8_t state)
 {
 	uint8_t array_exti[] = {
 		6, 7, 8, 9, 10,
@@ -80,35 +81,25 @@ set_interr(uint8_t port_name, pins_num pin_num)
 		40, 40, 40, 40, 40, 40
 	};
 	uint8_t off_set_name = (port_name - (uint8_t)'A');
-	uint8_t off_set_bit = off_set_name * 4;
+	uint8_t off_set_bit = (pin_num & 0x3) << 2;
+	uint8_t irq = array_exti[pin_num];
 	RCC->APB2ENR |= (1 << 14);
-	if(pin_num <= 3) {
+	if(pin_num <= 3)
 		SYSCFG->EXTICR1 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
-		EXTI->IMR |= (1 << pin_num);
-		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
-	}
 	else
-	if(pin_num >= 4 && pin_num <= 7) {
-		SYSCFG->EXTICR2 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
-		EXTI->IMR |= (1 << pin_num);
-		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
-	}
+	if(pin_num <= 7)
+		SYSCFG->EXTICR2 = (SYSCFG->EXTICR2 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 	else
-	if(pin_num >= 8 && pin_num <= 11) {
-		SYSCFG->EXTICR3 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
-		EXTI->IMR |= (1 << pin_num);
-		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
-	}
+	if(pin_num <= 11)
+		SYSCFG->EXTICR3 = (SYSCFG->EXTICR3 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
 	else
-	if(pin_num >= 12 && pin_num <= 15) {
-		SYSCFG->EXTICR4 = (SYSCFG->EXTICR1 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
+		SYSCFG->EXTICR4 = (SYSCFG->EXTICR4 & ~(0xF << off_set_bit)) | (off_set_name << off_set_bit);
+	EXTI->RTSR |= (1 << pin_num);
+	if(state)
 		EXTI->IMR |= (1 << pin_num);
-		EXTI->RTSR |= (1 << pin_num);
-		NVIC->ISER[(array_exti[pin_num] / 32)] |= (1 << (array_exti[pin_num] / 32));
-	}
+	else
+		EXTI->IMR &= ~(1 << pin_num);
+	NVIC->ISER[irq >> 5] |= (1 << (irq & 0x1F));
 }
 
 void

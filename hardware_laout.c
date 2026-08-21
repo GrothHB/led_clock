@@ -45,14 +45,14 @@ void
 set_arraygnd(volatile struct ARRAYGND* ptr, volatile struct GPIO* GPIOA, volatile struct GPIO* GPIOB)
 {
 	*ptr = (volatile struct ARRAYGND) {
-		.A = &GPIOA,
-		.B = &GPIOA,
-		.C = &GPIOA,
-		.E = &GPIOB,
-		.F = &GPIOB,
-		.G = &GPIOB,
-		.H = &GPIOB,
-		.DOT = &GPIOA,
+		.A = GPIOA,
+		.B = GPIOA,
+		.C = GPIOA,
+		.E = GPIOB,
+		.F = GPIOB,
+		.G = GPIOB,
+		.H = GPIOB,
+		.DOT = GPIOA,
 		.pins_num = { 
 			Px3, Px2, Px10, Px3, Px8,
 			Px4, Px10, Px8

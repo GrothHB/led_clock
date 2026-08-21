@@ -56,7 +56,7 @@ struct SYSCFG_type {
 	volatile uint32_t EXTICR2;
 	volatile uint32_t EXTICR3;
 	volatile uint32_t EXTICR4;
-	volatile uint32_t RESERVED;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t CPMCR;
 };
 
