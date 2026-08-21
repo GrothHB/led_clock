@@ -1,7 +1,7 @@
 extern unsigned int new_stack;
 extern void handler(void);
-extern buttons_interr(void);
-extern systick_interr(void);
+extern void buttons_interr(void);
+extern void systick_interr(void);
 __attribute__((section(".isr_vector")))
 void* vector[] =
 {

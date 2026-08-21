@@ -6,7 +6,7 @@
 #define OFF 0
 
 void
-set_all(struct GPIO* ptr, struct GPIO* ptr2)
+set_all(volatile struct GPIO* ptr, volatile struct GPIO* ptr2)
 {
 	set_moder(ptr, GENERAL, Px4);
 	set_moder(ptr, GENERAL, Px0);
@@ -42,9 +42,9 @@ set_all(struct GPIO* ptr, struct GPIO* ptr2)
 }
 
 void
-set_arraygnd(struct ARRAYGND* ptr, struct GPIO* GPIOA, struct GPIO* GPIOB)
+set_arraygnd(volatile struct ARRAYGND* ptr, volatile struct GPIO* GPIOA, volatile struct GPIO* GPIOB)
 {
-	*ptr = (struct ARRAYGND) {
+	*ptr = (volatile struct ARRAYGND) {
 		.A = &GPIOA,
 		.B = &GPIOA,
 		.C = &GPIOA,
@@ -66,12 +66,13 @@ set_all_interr(void)
 	set_interr((uint8_t)'A', Px9, ON);
 	set_interr((uint8_t)'A', Px7, ON);
 	set_interr((uint8_t)'A', Px6, ON);
+	set_interr((uint8_t)'A', Px5, ON);
 }
 
 void
-set_power_pins(struct ARRAYELECT* power_array, struct GPIO* GPIOA, struct GPIO* GPIOB)
+set_power_pins(volatile struct ARRAYELECT* power_array, volatile struct GPIO* GPIOA, volatile struct GPIO* GPIOB)
 {
-	*power_array = (struct ARRAYELECT) {
+	*power_array = (volatile struct ARRAYELECT) {
 		.FST = GPIOA,
 		.SND = GPIOA,
 		.THRD = GPIOA,

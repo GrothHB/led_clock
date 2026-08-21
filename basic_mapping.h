@@ -24,24 +24,31 @@ struct RCC_type {
 	volatile uint32_t CIR;
 	volatile uint32_t AHB1RSTR;
 	volatile uint32_t AHB2RSTR;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t APB1RSTR;
 	volatile uint32_t APB2RST;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t AHB1ENR;
 	volatile uint32_t AHB2ENR;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t APB1ENR;
 	volatile uint32_t APB2ENR;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t AHB1LPENR;
 	volatile uint32_t AHB2LPENR;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t APB1LPENR;
 	volatile uint32_t APB2LPENR;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t BDCR;
 	volatile uint32_t CSR;
+	volatile uint32_t RESERVED[2];
 	volatile uint32_t SSCGR;
 	volatile uint32_t PLLI2SCFGR;
 	volatile uint32_t DCKCFGR;
 };
 
-#define RCC ((struct RCC_type*)0x40023800)
+#define RCC ((volatile struct RCC_type*)0x40023800)
 struct SYSCFG_type {
 	volatile uint32_t MEMRMP;
 	volatile uint32_t PMC;
@@ -49,10 +56,11 @@ struct SYSCFG_type {
 	volatile uint32_t EXTICR2;
 	volatile uint32_t EXTICR3;
 	volatile uint32_t EXTICR4;
+	volatile uint32_t RESERVED;
 	volatile uint32_t CPMCR;
 };
 
-#define SYSCFG ((struct SYSCFG_type*)0x40013000)
+#define SYSCFG ((volatile struct SYSCFG_type*)0x40013000)
 struct NVIC_type {
 	volatile uint32_t ISER[8];
 	volatile uint32_t RESERVED0[24];
@@ -67,7 +75,7 @@ struct NVIC_type {
 	volatile uint32_t IPR[60];
 };
 
-#define NVIC ( (struct NVIC_type*)0xE000E100 )
+#define NVIC ( (volatile struct NVIC_type*)0xE000E100 )
 
 struct STK_type {
 	volatile uint32_t CTRL;
@@ -76,7 +84,7 @@ struct STK_type {
 	volatile uint32_t CALIB;
 };
 
-#define STK ((struct STK_type*)0xE000E010)
+#define STK ((volatile struct STK_type*)0xE000E010)
 
 struct EXTI_type {
 	volatile uint32_t IMR;
@@ -87,25 +95,25 @@ struct EXTI_type {
 	volatile uint32_t PR;
 };
 
-#define EXTI ((struct EXTI_type*)0x40013C00)
+#define EXTI ((volatile struct EXTI_type*)0x40013C00)
 
 struct ARRAYGND {
-	struct GPIO* A;
-	struct GPIO* B;
-	struct GPIO* C;
-	struct GPIO* E;
-	struct GPIO* F;
-	struct GPIO* G;
-	struct GPIO* H;
-	struct GPIO* DOT;
+	volatile struct GPIO* A;
+	volatile struct GPIO* B;
+	volatile struct GPIO* C;
+	volatile struct GPIO* E;
+	volatile struct GPIO* F;
+	volatile struct GPIO* G;
+	volatile struct GPIO* H;
+	volatile struct GPIO* DOT;
 	volatile uint8_t pins_num[8];
 };
 
 struct ARRAYELECT {
-	struct GPIO* FST;
-	struct GPIO* SND;
-	struct GPIO* THRD;
-	struct GPIO* FRTH;
+	volatile struct GPIO* FST;
+	volatile struct GPIO* SND;
+	volatile struct GPIO* THRD;
+	volatile struct GPIO* FRTH;
 	volatile pins_num pins_num[4];
 };
 

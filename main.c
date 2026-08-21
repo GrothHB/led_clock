@@ -12,40 +12,38 @@
 #define TIME 16000
 #define BASIC 1
 
-void light_dot(struct GPIO* ptr, pins_num pin, uint8_t lg);
-void refresh_screen(uint8_t *vec, uint8_t, uint8_t);
+void light_dot(volatile struct GPIO* ptr, pins_num pin, uint8_t lg);
+void refresh_screen(volatile uint8_t *vec, uint8_t, uint8_t);
 
 
 volatile uint32_t systime, tflag, time_of_button1, time_of_button2;
 volatile uint32_t time_of_button3, time_of_button4, blink_time;
 volatile logic state;
 volatile uint8_t nflag, bflag1, bflag2, bflag3, right, left, digits[4];
-volatile struct GPIO GPIOA, GPIOB;
+volatile struct GPIO *GPIOA, *GPIOB;
 volatile struct ARRAYGND ARRAY_PORTS;
 volatile struct ARRAYELECT POWER_PINS;
 
 int
 main(void)
 {
-	*digits = (uint8_t) {
-		0, 
-		0, 
-		0, 
-		0
-	};
+	digits[0] = 0;
+	digits[1] = 0;
+	digits[2] = 0;
+	digits[3] = 0;
 	nflag = bflag1 = bflag2 = bflag3 = right = 0;
 	systime = tflag = 0;
 	left = 1;
 	state = NEUTRAL;
 	set_power_port('A', ON, &GPIOA);
-	set_power_port('A', ON, &GPIOB);
-	set_all(&GPIOA, &GPIOB);
-	set_arraygnd(&ARRAY_PORTS, &GPIOA, &GPIOB);
-	set_power_pins(&POWER_PINS, &GPIOA, &GPIOB);
+	set_power_port('B', ON, &GPIOB);
+	set_all(GPIOA, GPIOB);
+	set_arraygnd(&ARRAY_PORTS, GPIOA, GPIOB);
+	set_power_pins(&POWER_PINS, GPIOA, GPIOB);
 	set_all_interr();
 	EXTI->IMR &= ~(0x1 << 7);
 	EXTI->IMR &= ~(0x1 << 6);
-	EXTI->IMR &= ~(0x1 << 8);
+	EXTI->IMR &= ~(0x1 << 5);
 	while(1) {
 		switch (state) {
 			case NEUTRAL:
@@ -140,12 +138,12 @@ buttons_interr(void)
 		if(!bflag1) {
 			EXTI->IMR &= ~(0X1 << 7);
 			EXTI->IMR &= ~(0X1 << 6);
-			EXTI->IMR &= ~(0X1 << 8);
+			EXTI->IMR &= ~(0X1 << 5);
 		}
 		else {  
 			EXTI->IMR |= (0X1 << 7);
 			EXTI->IMR |= (0X1 << 6);
-			EXTI->IMR |= (0X1 << 8);
+			EXTI->IMR |= (0X1 << 5);
 		}
 	}
 	else
@@ -163,16 +161,16 @@ buttons_interr(void)
 		EXTI->IMR &= ~(0x1 << 6);
 	}
 	else
-	if(EXTI->PR & ~(0x1 << 8)) {
+	if(EXTI->PR & ~(0x1 << 5)) {
 		time_of_button4 = systime;
 		++nflag;
-		EXTI->PR |= (0x1 << 8);
-		EXTI->IMR &= ~(0x1 << 8);
+		EXTI->PR |= (0x1 << 5);
+		EXTI->IMR &= ~(0x1 << 5);
 	}
 }
 
 void
-refresh_screen(uint8_t *vec, uint8_t right, uint8_t left)
+refresh_screen(volatile uint8_t *vec, uint8_t right, uint8_t left)
 {
 	turn_pin(POWER_PINS.FST, POWER_PINS.pins_num[0], ON & right);
 	light_dig(&ARRAY_PORTS, vec[0]);
@@ -191,7 +189,7 @@ refresh_screen(uint8_t *vec, uint8_t right, uint8_t left)
 }
 	
 void
-light_dot(struct GPIO* ptr, pins_num pin, uint8_t lg)
+light_dot(volatile struct GPIO* ptr, pins_num pin, uint8_t lg)
 {
 	turn_pin(ptr, pin, lg);
 	light_dig(&ARRAY_PORTS, 10);
