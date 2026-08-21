@@ -11,15 +11,16 @@
 /* Set for 1 milisec */
 #define TIME 16000
 #define BASIC 1
+/* light_dig() draws the colon for any value it has no digit for */
+#define DOT_DIG 10
 
-void light_dot(volatile struct GPIO* ptr, pins_num pin, uint8_t lg);
 void refresh_screen(volatile uint8_t *vec, uint8_t, uint8_t);
 
 
 volatile uint32_t systime, tflag, time_of_button1, time_of_button2;
 volatile uint32_t time_of_button3, time_of_button4, blink_time;
 volatile logic state;
-volatile uint8_t nflag, bflag1, bflag2, bflag3, right, left, digits[4];
+volatile uint8_t nflag, bflag1, bflag2, bflag3, right, left, nblink, digits[4];
 volatile struct GPIO *GPIOA, *GPIOB;
 volatile struct ARRAYGND ARRAY_PORTS;
 volatile struct ARRAYELECT POWER_PINS;
@@ -31,7 +32,7 @@ main(void)
 	digits[1] = 0;
 	digits[2] = 0;
 	digits[3] = 0;
-	nflag = bflag1 = bflag2 = bflag3 = right = 0;
+	nflag = bflag1 = bflag2 = bflag3 = right = nblink = 0;
 	systime = tflag = 0;
 	left = 1;
 	state = NEUTRAL;
@@ -105,19 +106,13 @@ systick_interr(void)
 	++systime;
 	++tflag;
 	if(bflag2) {
-		if(bflag3) {
-			light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2], ON);
-			light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2], OFF);
-		}
-		else {
-			light_dot(POWER_PINS.FRTH, POWER_PINS.pins_num[3], ON);
-			light_dot(POWER_PINS.FRTH, POWER_PINS.pins_num[3], OFF);
-		}
 		if(systime - blink_time > 65) {
-			refresh_screen(&digits[0], ON, ON);
+			nblink ^= 0x1;
 			blink_time = systime;
 		}
-		else 
+		if(nblink)
+			refresh_screen(&digits[0], ON, ON);
+		else
 			refresh_screen(&digits[0], right, left);
 	}
 	else refresh_screen(&digits[0], ON, ON);
@@ -176,25 +171,59 @@ buttons_interr(void)
 void
 refresh_screen(volatile uint8_t *vec, uint8_t right, uint8_t left)
 {
-	turn_pin(POWER_PINS.FST, POWER_PINS.pins_num[0], ON & right);
-	light_dig(&ARRAY_PORTS, vec[0]);
+	/* One element per tick. Driving all five inside a single 1 ms
+	   interrupt leaves each of them lit for only a few microseconds. */
+	static uint8_t slot;
+	volatile struct GPIO* port;
+	pins_num pin;
+	uint8_t show;
+
+	reset_all(&ARRAY_PORTS);
 	turn_pin(POWER_PINS.FST, POWER_PINS.pins_num[0], OFF);
-	turn_pin(POWER_PINS.SND, POWER_PINS.pins_num[1], ON & right);
-	light_dig(&ARRAY_PORTS,vec[1]);
 	turn_pin(POWER_PINS.SND, POWER_PINS.pins_num[1], OFF);
-	light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2], ON);
-	light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2], OFF);
-	turn_pin(POWER_PINS.THRD, POWER_PINS.pins_num[2], ON & left);
-	light_dig(&ARRAY_PORTS, vec[2]);
 	turn_pin(POWER_PINS.THRD, POWER_PINS.pins_num[2], OFF);
-	turn_pin(POWER_PINS.FRTH, POWER_PINS.pins_num[3], ON & left) ;
-	light_dig(&ARRAY_PORTS, vec[3]);
 	turn_pin(POWER_PINS.FRTH, POWER_PINS.pins_num[3], OFF);
-}
-	
-void
-light_dot(volatile struct GPIO* ptr, pins_num pin, uint8_t lg)
-{
-	turn_pin(ptr, pin, lg);
-	light_dig(&ARRAY_PORTS, 10);
+
+	switch (slot) {
+		case 0:
+			port = POWER_PINS.FST;
+			pin = POWER_PINS.pins_num[0];
+			show = right;
+			light_dig(&ARRAY_PORTS, vec[0]);
+			break;
+		case 1:
+			port = POWER_PINS.SND;
+			pin = POWER_PINS.pins_num[1];
+			show = right;
+			light_dig(&ARRAY_PORTS, vec[1]);
+			break;
+		case 2:
+			/* colon, and the marker for the field being edited */
+			if(bflag2 && !bflag3) {
+				port = POWER_PINS.FRTH;
+				pin = POWER_PINS.pins_num[3];
+			}
+			else {
+				port = POWER_PINS.THRD;
+				pin = POWER_PINS.pins_num[2];
+			}
+			show = 1;
+			light_dig(&ARRAY_PORTS, DOT_DIG);
+			break;
+		case 3:
+			port = POWER_PINS.THRD;
+			pin = POWER_PINS.pins_num[2];
+			show = left;
+			light_dig(&ARRAY_PORTS, vec[2]);
+			break;
+		default:
+			port = POWER_PINS.FRTH;
+			pin = POWER_PINS.pins_num[3];
+			show = left;
+			light_dig(&ARRAY_PORTS, vec[3]);
+			break;
+	}
+	if(show)
+		turn_pin(port, pin, ON);
+	slot = (slot < 4) ? (slot + 1) : 0;
 }

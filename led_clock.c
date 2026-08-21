@@ -64,7 +64,6 @@ light_dig(volatile struct ARRAYGND* array, uint8_t num)
 			dot(array);
 			break;
 	}
-	reset_all(array);
 }
 
 void
