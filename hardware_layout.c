@@ -2,8 +2,7 @@
 #include "basic_mapping.h"
 #include "hal.h"
 #include "utilites.h"
-#define ON 1
-#define OFF 0
+#include "hardware_layout.h"
 
 void
 set_all(volatile struct GPIO* ptr, volatile struct GPIO* ptr2)
@@ -45,15 +44,17 @@ void
 set_arraygnd(volatile struct ARRAYGND* ptr, volatile struct GPIO* GPIOA, volatile struct GPIO* GPIOB)
 {
 	*ptr = (volatile struct ARRAYGND) {
-		.A = GPIOB,
-		.B = GPIOB,
-		.C = GPIOA,
-		.E = GPIOB,
-		.F = GPIOB,
-		.G = GPIOB,
-		.H = GPIOB,
-		.DOT = GPIOA,
-		.pins_num = { 
+		.pin = {
+			[0] = GPIOB, /* A */
+			[1] = GPIOB, /* B */
+			[2] = GPIOA, /* C */
+			[3] = GPIOB, /* E */
+			[4] = GPIOB, /* F */
+			[5] = GPIOB, /* G */
+			[6] = GPIOB, /* H */
+			[7] = GPIOA /* DOT */
+		},
+		.pin_num = { 
 			Px9, Px6, Px10, Px3, Px8,
 			Px4, Px10, Px8
 		}
@@ -73,10 +74,12 @@ void
 set_power_pins(volatile struct ARRAYELECT* power_array, volatile struct GPIO* GPIOA, volatile struct GPIO* GPIOB)
 {
 	*power_array = (volatile struct ARRAYELECT) {
-		.FST = GPIOA,
-		.SND = GPIOA,
-		.THRD = GPIOA,
-		.FRTH = GPIOB,
-		.pins_num = { Px4, Px0, Px1, Px0 }
+		.pin = {
+			[0] = GPIOA,
+			[1] = GPIOA,
+			[2] = GPIOA,
+			[3] = GPIOB
+		},
+		.pin_num = { Px4, Px0, Px1, Px0 }
 	};
 }

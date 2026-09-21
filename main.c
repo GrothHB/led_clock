@@ -2,30 +2,33 @@
 #include "symbols.h"
 #include "hal.h"
 #include "basic_mapping.h"
-#include "led_clock.h"
-#include "hardware_laout.h"
+#include "hardware_layout.h"
 #include "utilites.h"
 #include "mod.h"
+#include "dig_disp.h"
 
 #define ON 1
 #define OFF 0
 /* Set for 1 milisec */
 #define TIME 16000
-#define BASIC 1
 
-void 		light_dot(volatile struct GPIO *, pins_num , uint8_t);
 void 		refresh_screen(uint8_t , uint8_t);
+void		switch_off(void);
+void		calc_digits(uint32_t);
 
 
-volatile uint32_t 		systime, tflag, time_of_button1;
-volatile uint32_t		time_of_button2, blink_time;
+volatile uint32_t 		systime, time_of_button1, tflag;
+volatile uint32_t		clock_time;
+volatile uint32_t		time_of_button2, blink_time, nflag;
 volatile uint32_t 		time_of_button3, time_of_button4;
-volatile logic 			state;
-volatile uint8_t 		nflag, bflag1, bflag2, bflag3, right;
-volatile uint8_t		left, digits[4];
+volatile uint8_t		digits[4];
 volatile struct GPIO 		*GPIOA, *GPIOB;
 volatile struct ARRAYGND 	ARRAY_PORTS;
 volatile struct ARRAYELECT 	POWER_PINS;
+volatile enum clock_state	state;
+volatile enum side_focus	side;
+volatile enum time_interval	timep;
+volatile enum mode_state	in_mode;
 
 int
 main(void)
@@ -34,12 +37,14 @@ main(void)
 	digits[1] = 0;
 	digits[2] = 0;
 	digits[3] = 0;
-	nflag = bflag1 = bflag2 = bflag3 = right = 0;
-	systime = tflag = 0;
-	left = 1;
-	state = NEUTRAL;
+	nflag = 0;
+	systime = clock_time = tflag = 0;
+	state = SLEEP;
+	timep = HOURS;
+	in_mode = BLOCK;
 	set_power_port('A', ON, &GPIOA);
 	set_power_port('B', ON, &GPIOB);
+	set_SEG();
 	set_all(GPIOA, GPIOB);
 	set_arraygnd(&ARRAY_PORTS, GPIOA, GPIOB);
 	set_power_pins(&POWER_PINS, GPIOA, GPIOB);
@@ -51,52 +56,60 @@ main(void)
 	while (1) {
 		__asm volatile ("wfi");
 		switch (state) {
-		case NEUTRAL:
+		case SLEEP:
 			break;
-		case SETTING_TIME:
-			bflag1 = mod(2, (bflag1 + 1));
-			state = bflag1 ? JUMP_BTW: SET;
-			blink_time = systime;
+		case TURN_ON:
+			switch (in_mode) {
+			case BLOCK:
+				break;
+			case SET_INTERVAL:
+				if (timep == HOURS) {
+					timep = MIN;
+					digits[0] = 0;
+					digits[1] = 0;
+					digits[2] = 0;
+					digits[3] = 0;
+				} else {
+					timep = HOURS;
+					digits[0] = 0;
+					digits[1] = 0;
+					digits[2] = 0;
+					digits[3] = 0;
+				}
+				nflag = 0;
+				in_mode = BLOCK;
+				break;
+			case SET_SIDE:
+				if (side == LEFT) {
+					side = RIGHT;
+				} else {
+					side = LEFT;
+				}
+				in_mode = BLOCK;
+				break;
+			case ADD:
+				if (side == RIGHT)
+					++nflag;
+				else
+					nflag += 60;
+				calc_digits(nflag);
+				in_mode = BLOCK;
+				break;
+			}
 			break;
-		case JUMP_BTW:
-			right ^= 0x1;
-			left ^= 0x1;
-			state = JUMP_BTW_WAIT;
-			break;
-		case JUMP_BTW_WAIT:
-			break;
-		case SET_TIME_SPEND:
-			bflag3 = mod(2, (bflag3 + 1));
-			state = bflag3 ? SET_SEC: SET_MIN;
-			break;
-		case SET:
-			state = bflag3 ? ADD_SEC: ADD_MIN;
-			bflag2 = 0;
-			tflag = systime;
-			break;
-		case ADD_SEC:
-			digits[0] =  mod(10 , (mod(60, (tflag / 1000))));
-			digits[1] = (mod(60, (tflag / 1000))) / 10;
-			digits[2] =  mod(10 , (mod(60, (tflag / 60000))));
-			digits[3] =  (mod(60, (tflag / 60000))) / 10;
-			break;
-		case ADD_MIN:
-			digits[0] =  mod(10 , (mod(60, (tflag / 60000))));
-			digits[1] = (mod(60, tflag / 60000)) / 10;
-			digits[2] =  mod(10 , (mod(24, (tflag / 360000))));
-			digits[3] =  (mod(24, (tflag / 360000))) / 10;
-			break;
-		case SET_SEC:
-			digits[0] = mod(10, (mod(60, nflag)));
-			digits[1] = (mod(60, nflag)) / 10;
-			digits[2] = mod(60, (nflag / 60));
-			digits[3] = (mod(60, (nflag / 60))) / 10;
-			break;
-		case SET_MIN:
-			digits[0] =  mod(10 , (mod(60, nflag)));
-			digits[1] = (mod(60, nflag)) / 10;
-			digits[2] =  mod(10 , (mod(24, (nflag / 60))));
-			digits[3] =  (mod(24, (nflag / 60))) / 10;
+		case REAL_TIME:
+			if (timep == MIN) {
+				if (systime - clock_time < 1000)
+					break;
+				++tflag;
+				clock_time = systime;
+			} else {
+				if (systime - clock_time < 60000)
+					break;
+				++tflag;
+				clock_time = systime;
+			}
+			calc_digits(tflag);
 			break;
 		}
 	}
@@ -107,44 +120,47 @@ void
 systick_interr(void)
 {
 	static uint32_t iter = 0;
-	iter = mod(4, (iter + 1));
+	iter = mod((iter + 1), 4);
 	++systime;
-	++tflag;
-	if (bflag2) {
-		if (bflag3) {
-			light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2],
-				  OFF);
-			light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[3],
-				  OFF);
-			light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2],
-				  ON);
+	if (state == SLEEP) {
+		halt_interr(ON, Px9);
+		return;
+	}
+	if (state == TURN_ON) {
+		if (side == RIGHT) {
+			switch_off();
+			if (iter == 0 || iter == 1) {
+				if (systime - blink_time < 350) {
+					refresh_screen(digits[iter], iter);
+				} else if (systime - blink_time >= 700) {
+					blink_time = systime;
+				}
+			} else {
+				refresh_screen(digits[iter], iter);
+			}
 		} else {
-			light_dot(POWER_PINS.FRTH, POWER_PINS.pins_num[3],
-				  OFF);
-			light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2],
-				  OFF);
-			light_dot(POWER_PINS.FRTH, POWER_PINS.pins_num[3],
-				  ON);
-		}
-		if (systime - blink_time > 65) {
-			reset_all(&ARRAY_PORTS);
-			refresh_screen(digits[iter], iter);
-			blink_time = systime;
-		} else {
-			reset_all(&ARRAY_PORTS);
-			refresh_screen(digits[iter], iter);
+			switch_off();
+			if (iter == 2 || iter == 3) {
+				if (systime - blink_time < 350) {
+					refresh_screen(digits[iter], iter);
+				} else if (systime - blink_time >= 700) {
+					blink_time = systime;
+				}
+			} else {
+				refresh_screen(digits[iter], iter);
+			}
 		}
 	} else {
-		reset_all(&ARRAY_PORTS);
+		switch_off();
 		refresh_screen(digits[iter], iter);
 	}
-	if (systime - time_of_button1 > 50 && time_of_button1)
+	if (systime - time_of_button1 > 200 && time_of_button1)
 		halt_interr(ON, Px9);
-	if (systime - time_of_button2 > 50 && time_of_button2)
+	if (systime - time_of_button2 > 200 && time_of_button2)
 		halt_interr(ON, Px7);
-	if (systime - time_of_button3 > 50 && time_of_button3)
+	if (systime - time_of_button3 > 200 && time_of_button3)
 		halt_interr(ON, Px6);
-	if (systime - time_of_button4 > 50 && time_of_button4)
+	if (systime - time_of_button4 > 200 && time_of_button4)
 		halt_interr(ON, Px5);
 }
 
@@ -153,67 +169,83 @@ buttons_interr(void)
 {
 	if ((EXTI->PR >> 9) & 0x1) {
 		time_of_button1 = systime;
-		state = SETTING_TIME;
-		EXTI->PR |= (0x1 << 9);
-		EXTI->IMR &= ~(0x1 << 9);
-		if (!bflag1) {
-			EXTI->IMR &= ~(0X1 << 7);
-			EXTI->IMR &= ~(0X1 << 6);
-			EXTI->IMR &= ~(0X1 << 5);
-		} else {  
+		if (state == SLEEP) {
+			state = TURN_ON;
+			side = RIGHT;
+			switch_off();
 			EXTI->IMR |= (0X1 << 7);
 			EXTI->IMR |= (0X1 << 6);
 			EXTI->IMR |= (0X1 << 5);
+		} else if (state == TURN_ON) {
+			state = REAL_TIME;
+			switch_off();
+			tflag = nflag;
+			clock_time = systime;
+			EXTI->IMR &= ~(0X1 << 7);
+			EXTI->IMR &= ~(0X1 << 6);
+			EXTI->IMR &= ~(0X1 << 5);
+		} else if (state == REAL_TIME) {
+			state = SLEEP;
+			switch_off();
+			in_mode = BLOCK;
+			nflag = tflag;
 		}
+		EXTI->PR |= (0x1 << 9);
+		EXTI->IMR &= ~(0x1 << 9);
 	} else if ((EXTI->PR >> 7) & 0x1) {
 		time_of_button2 = systime;
-		state = JUMP_BTW;
-		bflag2 = 1;
+		in_mode = SET_INTERVAL;
 		EXTI->PR |= (0x1 << 7);
 		EXTI->IMR &= ~(0x1 << 7);
 	} else if ((EXTI->PR >> 6) & 0x1) {
 		time_of_button3 = systime;
+		in_mode = SET_SIDE;
 		EXTI->PR |= (0x1 << 6);
 		EXTI->IMR &= ~(0x1 << 6);
 	} else if ((EXTI->PR >> 5) & 0x1) {
 		time_of_button4 = systime;
-		++nflag;
+		in_mode = ADD;
 		EXTI->PR |= (0x1 << 5);
 		EXTI->IMR &= ~(0x1 << 5);
 	}
 }
-
 void
 refresh_screen(uint8_t digv, uint8_t scn)
 {
-	turn_pin(POWER_PINS.FST, POWER_PINS.pins_num[0], OFF);
-	turn_pin(POWER_PINS.SND, POWER_PINS.pins_num[1], OFF);
-	light_dot(POWER_PINS.THRD, POWER_PINS.pins_num[2], OFF);
-	turn_pin(POWER_PINS.FRTH, POWER_PINS.pins_num[3], OFF);
-	switch (scn) {
-	case 0:
-		turn_pin(POWER_PINS.FST, POWER_PINS.pins_num[0], ON);
-		light_dig(&ARRAY_PORTS, digv);
-		break;
-	case 1:
-		turn_pin(POWER_PINS.SND, POWER_PINS.pins_num[1], ON);
-		light_dig(&ARRAY_PORTS, digv);
-		break;
-	case 2:
-		turn_pin(POWER_PINS.THRD, POWER_PINS.pins_num[2], ON);
-		light_dig(&ARRAY_PORTS, digv);
-		MASK_ON(ARRAY_PORTS.DOT->ODR, ARRAY_PORTS.pins_num[7]);
-		break;
-	case 3:
-		turn_pin(POWER_PINS.FRTH, POWER_PINS.pins_num[3], ON);
-		light_dig(&ARRAY_PORTS, digv);
-		break;
-	}
+	set_digit(&ARRAY_PORTS, digv);
+	if (timep == HOURS && state == TURN_ON && scn == 0)		
+		MASK_ON(ARRAY_PORTS.pin[7]->ODR, ARRAY_PORTS.pin_num[7]);
+	else if (state == REAL_TIME && scn == 2)
+		MASK_ON(ARRAY_PORTS.pin[7]->ODR, ARRAY_PORTS.pin_num[7]);
+	else if (timep == MIN && state == TURN_ON && scn == 3)
+		MASK_ON(ARRAY_PORTS.pin[7]->ODR, ARRAY_PORTS.pin_num[7]);
+	turn_pin(POWER_PINS.pin[scn], POWER_PINS.pin_num[scn], ON);
 }
 	
 void
-light_dot(volatile struct GPIO* ptr, pins_num pin, uint8_t lg)
+switch_off(void)
 {
-	turn_pin(ptr, pin, lg);
-	light_dig(&ARRAY_PORTS, 10);
+	turn_pin(POWER_PINS.pin[0] ,POWER_PINS.pin_num[0], OFF);
+	turn_pin(POWER_PINS.pin[1] ,POWER_PINS.pin_num[1], OFF);
+	turn_pin(POWER_PINS.pin[2] ,POWER_PINS.pin_num[2], OFF);
+	turn_pin(POWER_PINS.pin[3] ,POWER_PINS.pin_num[3], OFF);
+}
+
+void
+calc_digits(uint32_t val)
+{
+	uint32_t 		divbs, ms;
+	ms = mod(val, 60);
+	divbs = val / 60; 
+	if (timep == MIN) {
+		digits[0] = mod(ms, 10); 
+		digits[1] = ms / 10;
+		digits[2] = mod(mod(divbs, 60), 10);
+		digits[3] = mod(divbs, 60) / 10;
+	} else {
+		digits[0] = mod(ms, 10);
+		digits[1] = ms / 10;
+		digits[2] = mod(mod(divbs, 24), 10);
+		digits[3] = mod(divbs, 24) / 10;
+	}
 }

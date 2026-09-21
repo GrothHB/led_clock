@@ -2,7 +2,7 @@
 #define MOD_H
 
 static uint32_t
-mod(uint32_t ideal, uint32_t num)
+mod(uint32_t num, uint32_t ideal)
 {
 	uint32_t	div, rest;
 	__asm volatile (

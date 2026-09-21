@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "utilites.h"
 
 uint32_t 
 __aeabi_uidiv(uint32_t numerator, uint32_t denominator) 
@@ -12,7 +13,7 @@ __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 		  "r" (denominator)
 	);
 
-	return result;
+	return (result);
 }
 
 void

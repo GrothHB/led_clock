@@ -6,13 +6,13 @@
 #include "symbols.h"
 #include "utilites.h"
 
-void set_power_port(uint8_t port, uint8_t state, volatile struct GPIO** gpio);
-void set_moder(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num);
-void set_otyper(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num);
-void set_pupdr(volatile struct GPIO* reg, pinconf IO_purp, pins_num pin_num);
-void set_systick(uint32_t time);
-void set_interr(uint8_t port_name, pins_num pin_num);
-void switches_port(volatile struct GPIO* reg, pins_num pin_num, uint8_t state);
-void halt_interr(uint8_t state, pins_num pin_num);
+void		set_power_port(uint8_t, uint8_t, volatile struct GPIO **);
+void		set_moder(volatile struct GPIO *, enum pinconf, enum pin_num);
+void		set_otyper(volatile struct GPIO *, enum pinconf, enum pin_num);
+void		set_pupdr(volatile struct GPIO *, enum pinconf, enum pin_num);
+void		set_systick(uint32_t);
+void		set_interr(uint8_t, enum pin_num);
+void		switches_port(volatile struct GPIO *, enum pin_num, uint8_t);
+void		halt_interr(uint8_t, enum pin_num);
 
 #endif

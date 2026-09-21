@@ -98,23 +98,13 @@ struct EXTI_type {
 #define EXTI ((volatile struct EXTI_type*)0x40013C00)
 
 struct ARRAYGND {
-	volatile struct GPIO* A;
-	volatile struct GPIO* B;
-	volatile struct GPIO* C;
-	volatile struct GPIO* E;
-	volatile struct GPIO* F;
-	volatile struct GPIO* G;
-	volatile struct GPIO* H;
-	volatile struct GPIO* DOT;
-	volatile uint8_t pins_num[8];
+	volatile struct GPIO	*pin[8];
+	volatile uint8_t 	pin_num[8];
 };
 
 struct ARRAYELECT {
-	volatile struct GPIO* FST;
-	volatile struct GPIO* SND;
-	volatile struct GPIO* THRD;
-	volatile struct GPIO* FRTH;
-	volatile pins_num pins_num[4];
+	volatile struct GPIO	*pin[4];
+	volatile enum pin_num 	pin_num[4];
 };
 
 #endif
