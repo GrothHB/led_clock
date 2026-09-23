@@ -190,22 +190,22 @@ buttons_interr(void)
 			in_mode = BLOCK;
 			nflag = tflag;
 		}
-		EXTI->PR |= (0x1 << 9);
+		EXTI->PR = (0x1 << 9);
 		EXTI->IMR &= ~(0x1 << 9);
 	} else if ((EXTI->PR >> 7) & 0x1) {
 		time_of_button2 = systime;
 		in_mode = SET_INTERVAL;
-		EXTI->PR |= (0x1 << 7);
+		EXTI->PR = (0x1 << 7);
 		EXTI->IMR &= ~(0x1 << 7);
 	} else if ((EXTI->PR >> 6) & 0x1) {
 		time_of_button3 = systime;
 		in_mode = SET_SIDE;
-		EXTI->PR |= (0x1 << 6);
+		EXTI->PR = (0x1 << 6);
 		EXTI->IMR &= ~(0x1 << 6);
 	} else if ((EXTI->PR >> 5) & 0x1) {
 		time_of_button4 = systime;
 		in_mode = ADD;
-		EXTI->PR |= (0x1 << 5);
+		EXTI->PR = (0x1 << 5);
 		EXTI->IMR &= ~(0x1 << 5);
 	}
 }
@@ -214,11 +214,11 @@ refresh_screen(uint8_t digv, uint8_t scn)
 {
 	set_digit(&ARRAY_PORTS, digv);
 	if (timep == HOURS && state == TURN_ON && scn == 0)		
-		MASK_ON(ARRAY_PORTS.pin[7]->ODR, ARRAY_PORTS.pin_num[7]);
+		MASK_ON(ARRAY_PORTS.pin[7]->BSRR, ARRAY_PORTS.pin_num[7]);
 	else if (state == REAL_TIME && scn == 2)
-		MASK_ON(ARRAY_PORTS.pin[7]->ODR, ARRAY_PORTS.pin_num[7]);
+		MASK_ON(ARRAY_PORTS.pin[7]->BSRR, ARRAY_PORTS.pin_num[7]);
 	else if (timep == MIN && state == TURN_ON && scn == 3)
-		MASK_ON(ARRAY_PORTS.pin[7]->ODR, ARRAY_PORTS.pin_num[7]);
+		MASK_ON(ARRAY_PORTS.pin[7]->BSRR, ARRAY_PORTS.pin_num[7]);
 	turn_pin(POWER_PINS.pin[scn], POWER_PINS.pin_num[scn], ON);
 }
 	

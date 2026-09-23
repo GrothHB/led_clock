@@ -65,15 +65,6 @@ set_systick(uint32_t time)
 }
 
 void
-switches_port(volatile struct GPIO *reg, enum pin_num pin_num, uint8_t state)
-{
-	if(state)
-		reg->ODR |= (1 << pin_num);
-	else
-		reg->ODR &= ~(1 << pin_num);
-}
-
-void
 set_interr(uint8_t port_name, enum pin_num pin_num)
 {
 	uint8_t array_exti[] = {
